@@ -13,6 +13,20 @@ namespace Jose;
 
 use Assert\Assertion;
 use Base64Url\Base64Url;
+use Jose\Algorithm\ContentEncryptionAlgorithmInterface;
+use Jose\Algorithm\JWAInterface;
+use Jose\Algorithm\KeyEncryption\DirectEncryptionInterface;
+use Jose\Algorithm\KeyEncryption\KeyAgreementInterface;
+use Jose\Algorithm\KeyEncryption\KeyAgreementWrappingInterface;
+use Jose\Algorithm\KeyEncryption\KeyEncryptionInterface;
+use Jose\Algorithm\KeyEncryption\KeyWrappingInterface;
+use Jose\Algorithm\KeyEncryptionAlgorithmInterface;
+use Jose\Compression\CompressionInterface;
+use Jose\Object\JWEInterface;
+use Jose\Object\JWKInterface;
+use Jose\Object\JWKSet;
+use Jose\Object\JWKSetInterface;
+use Jose\Object\RecipientInterface;
 
 final class Decrypter
 {
@@ -22,9 +36,12 @@ final class Decrypter
     use Behaviour\CommonCipheringMethods;
 
     /**
-     * {@inheritdoc}
+     * @param array $key_encryption_algorithms
+     * @param array $content_encryption_algorithms
+     * @param array $compression_methods
+     * @return Decrypter
      */
-    public static function createDecrypter(array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF', 'ZLIB', 'GZ'])
+    public static function createDecrypter(array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods = ['DEF', 'ZLIB', 'GZ']): Decrypter
     {
         $decrypter = new self($key_encryption_algorithms, $content_encryption_algorithms, $compression_methods);
 
@@ -34,9 +51,9 @@ final class Decrypter
     /**
      * Decrypter constructor.
      *
-     * @param string[]|\Jose\Algorithm\KeyEncryptionAlgorithmInterface[]     $key_encryption_algorithms
-     * @param string[]|\Jose\Algorithm\ContentEncryptionAlgorithmInterface[] $content_encryption_algorithms
-     * @param string[]|\Jose\Compression\CompressionInterface[]              $compression_methods
+     * @param string[]|KeyEncryptionAlgorithmInterface[]     $key_encryption_algorithms
+     * @param string[]|ContentEncryptionAlgorithmInterface[] $content_encryption_algorithms
+     * @param string[]|CompressionInterface[]              $compression_methods
      */
     public function __construct(array $key_encryption_algorithms, array $content_encryption_algorithms, array $compression_methods)
     {
@@ -48,20 +65,24 @@ final class Decrypter
     }
 
     /**
-     * {@inheritdoc}
+     * @param JWEInterface $jwe
+     * @param JWKInterface $jwk
+     * @param null $recipient_index
      */
-    public function decryptUsingKey(Object\JWEInterface &$jwe, Object\JWKInterface $jwk, &$recipient_index = null)
+    public function decryptUsingKey(JWEInterface &$jwe, JWKInterface $jwk, &$recipient_index = null)
     {
-        $jwk_set = new Object\JWKSet();
+        $jwk_set = new JWKSet();
         $jwk_set->addKey($jwk);
 
         $this->decryptUsingKeySet($jwe, $jwk_set, $recipient_index);
     }
 
     /**
-     * {@inheritdoc}
+     * @param JWEInterface $jwe
+     * @param JWKSetInterface $jwk_set
+     * @param int|null $recipient_index
      */
-    public function decryptUsingKeySet(Object\JWEInterface &$jwe, Object\JWKSetInterface $jwk_set, &$recipient_index = null)
+    public function decryptUsingKeySet(JWEInterface &$jwe, JWKSetInterface $jwk_set, ?int &$recipient_index = null)
     {
         $this->checkJWKSet($jwk_set);
         $this->checkPayload($jwe);
@@ -81,13 +102,13 @@ final class Decrypter
     }
 
     /**
-     * @param \Jose\Object\JWEInterface    $jwe
-     * @param \Jose\Object\JWKSetInterface $jwk_set
+     * @param JWEInterface    $jwe
+     * @param JWKSetInterface $jwk_set
      * @param int                          $i
      *
-     * @return int|null
+     * @return int
      */
-    private function decryptRecipientKey(Object\JWEInterface &$jwe, Object\JWKSetInterface $jwk_set, $i)
+    private function decryptRecipientKey(JWEInterface &$jwe, JWKSetInterface $jwk_set, int $i): ?int
     {
         $recipient = $jwe->getRecipient($i);
         $complete_headers = array_merge($jwe->getSharedProtectedHeaders(), $jwe->getSharedHeaders(), $recipient->getHeaders());
@@ -115,52 +136,54 @@ final class Decrypter
                 continue;
             }
         }
+
+        return null;
     }
 
     /**
-     * @param \Jose\Object\JWEInterface $jwe
+     * @param JWEInterface $jwe
      */
-    private function checkRecipients(Object\JWEInterface $jwe)
+    private function checkRecipients(JWEInterface $jwe)
     {
         Assertion::greaterThan($jwe->countRecipients(), 0, 'The JWE does not contain any recipient.');
     }
 
     /**
-     * @param \Jose\Object\JWEInterface $jwe
+     * @param JWEInterface $jwe
      */
-    private function checkPayload(Object\JWEInterface $jwe)
+    private function checkPayload(JWEInterface $jwe)
     {
         Assertion::true(null === $jwe->getPayload(), 'The JWE is already decrypted.');
     }
 
     /**
-     * @param \Jose\Object\JWKSetInterface $jwk_set
+     * @param JWKSetInterface $jwk_set
      */
-    private function checkJWKSet(Object\JWKSetInterface $jwk_set)
+    private function checkJWKSet(JWKSetInterface $jwk_set)
     {
         Assertion::greaterThan(count($jwk_set), 0, 'No key in the key set.');
     }
 
     /**
-     * @param \Jose\Algorithm\JWAInterface                        $key_encryption_algorithm
-     * @param \Jose\Algorithm\ContentEncryptionAlgorithmInterface $content_encryption_algorithm
-     * @param \Jose\Object\JWKInterface                           $key
-     * @param \Jose\Object\RecipientInterface                     $recipient
+     * @param JWAInterface                        $key_encryption_algorithm
+     * @param ContentEncryptionAlgorithmInterface $content_encryption_algorithm
+     * @param JWKInterface                           $key
+     * @param RecipientInterface                     $recipient
      * @param array                                               $complete_headers
      *
-     * @return null|string
+     * @return string
      */
-    private function decryptCEK(Algorithm\JWAInterface $key_encryption_algorithm, Algorithm\ContentEncryptionAlgorithmInterface $content_encryption_algorithm, Object\JWKInterface $key, Object\RecipientInterface $recipient, array $complete_headers)
+    private function decryptCEK(JWAInterface $key_encryption_algorithm, ContentEncryptionAlgorithmInterface $content_encryption_algorithm, JWKInterface $key, RecipientInterface $recipient, array $complete_headers): string
     {
-        if ($key_encryption_algorithm instanceof Algorithm\KeyEncryption\DirectEncryptionInterface) {
+        if ($key_encryption_algorithm instanceof DirectEncryptionInterface) {
             return $key_encryption_algorithm->getCEK($key);
-        } elseif ($key_encryption_algorithm instanceof Algorithm\KeyEncryption\KeyAgreementInterface) {
+        } elseif ($key_encryption_algorithm instanceof KeyAgreementInterface) {
             return $key_encryption_algorithm->getAgreementKey($content_encryption_algorithm->getCEKSize(), $content_encryption_algorithm->getAlgorithmName(), $key, $complete_headers);
-        } elseif ($key_encryption_algorithm instanceof Algorithm\KeyEncryption\KeyAgreementWrappingInterface) {
+        } elseif ($key_encryption_algorithm instanceof KeyAgreementWrappingInterface) {
             return $key_encryption_algorithm->unwrapAgreementKey($key, $recipient->getEncryptedKey(), $content_encryption_algorithm->getCEKSize(), $complete_headers);
-        } elseif ($key_encryption_algorithm instanceof Algorithm\KeyEncryption\KeyEncryptionInterface) {
+        } elseif ($key_encryption_algorithm instanceof KeyEncryptionInterface) {
             return $key_encryption_algorithm->decryptKey($key, $recipient->getEncryptedKey(), $complete_headers);
-        } elseif ($key_encryption_algorithm instanceof Algorithm\KeyEncryption\KeyWrappingInterface) {
+        } elseif ($key_encryption_algorithm instanceof KeyWrappingInterface) {
             return $key_encryption_algorithm->unwrapKey($key, $recipient->getEncryptedKey(), $complete_headers);
         } else {
             throw new \InvalidArgumentException('Unsupported CEK generation');
@@ -168,14 +191,14 @@ final class Decrypter
     }
 
     /**
-     * @param \Jose\Object\JWEInterface                           $jwe
+     * @param JWEInterface                           $jwe
      * @param string                                              $cek
-     * @param \Jose\Algorithm\ContentEncryptionAlgorithmInterface $content_encryption_algorithm
+     * @param ContentEncryptionAlgorithmInterface $content_encryption_algorithm
      * @param array                                               $complete_headers
      *
      * @return bool
      */
-    private function decryptPayload(Object\JWEInterface &$jwe, $cek, Algorithm\ContentEncryptionAlgorithmInterface $content_encryption_algorithm, array $complete_headers)
+    private function decryptPayload(JWEInterface &$jwe, string $cek, ContentEncryptionAlgorithmInterface $content_encryption_algorithm, array $complete_headers): bool
     {
         $payload = $content_encryption_algorithm->decryptContent($jwe->getCiphertext(), $cek, $jwe->getIV(), null === $jwe->getAAD() ? null : Base64Url::encode($jwe->getAAD()), $jwe->getEncodedSharedProtectedHeaders(), $jwe->getTag());
         if (null === $payload) {
@@ -193,7 +216,7 @@ final class Decrypter
      * @param string $payload
      * @param array  $complete_headers
      */
-    private function decompressIfNeeded(&$payload, array $complete_headers)
+    private function decompressIfNeeded(string &$payload, array $complete_headers)
     {
         if (array_key_exists('zip', $complete_headers)) {
             $compression_method = $this->getCompressionMethod($complete_headers['zip']);
@@ -217,12 +240,12 @@ final class Decrypter
     /**
      * @param array $complete_headers
      *
-     * @return \Jose\Algorithm\KeyEncryptionAlgorithmInterface
+     * @return KeyEncryptionAlgorithmInterface
      */
-    private function getKeyEncryptionAlgorithm(array $complete_headers)
+    private function getKeyEncryptionAlgorithm(array $complete_headers): KeyEncryptionAlgorithmInterface
     {
         $key_encryption_algorithm = $this->getJWAManager()->getAlgorithm($complete_headers['alg']);
-        Assertion::isInstanceOf($key_encryption_algorithm, Algorithm\KeyEncryptionAlgorithmInterface::class, sprintf('The key encryption algorithm "%s" is not supported or does not implement KeyEncryptionAlgorithmInterface.', $complete_headers['alg']));
+        Assertion::isInstanceOf($key_encryption_algorithm, KeyEncryptionAlgorithmInterface::class, sprintf('The key encryption algorithm "%s" is not supported or does not implement KeyEncryptionAlgorithmInterface.', $complete_headers['alg']));
 
         return $key_encryption_algorithm;
     }
@@ -230,12 +253,12 @@ final class Decrypter
     /**
      * @param array $complete_headers
      *
-     * @return \Jose\Algorithm\ContentEncryptionAlgorithmInterface
+     * @return ContentEncryptionAlgorithmInterface
      */
-    private function getContentEncryptionAlgorithm(array $complete_headers)
+    private function getContentEncryptionAlgorithm(array $complete_headers): ContentEncryptionAlgorithmInterface
     {
         $content_encryption_algorithm = $this->getJWAManager()->getAlgorithm($complete_headers['enc']);
-        Assertion::isInstanceOf($content_encryption_algorithm, Algorithm\ContentEncryptionAlgorithmInterface::class, sprintf('The key encryption algorithm "%s" is not supported or does not implement ContentEncryptionInterface.', $complete_headers['enc']));
+        Assertion::isInstanceOf($content_encryption_algorithm, ContentEncryptionAlgorithmInterface::class, sprintf('The key encryption algorithm "%s" is not supported or does not implement ContentEncryptionInterface.', $complete_headers['enc']));
 
         return $content_encryption_algorithm;
     }
@@ -245,9 +268,9 @@ final class Decrypter
      *
      * @throws \InvalidArgumentException
      *
-     * @return \Jose\Compression\CompressionInterface
+     * @return CompressionInterface
      */
-    private function getCompressionMethod($method)
+    private function getCompressionMethod(string $method): CompressionInterface
     {
         $compression_method = $this->getCompressionManager()->getCompressionAlgorithm($method);
         Assertion::notNull($compression_method, sprintf('Compression method "%s" not supported', $method));
