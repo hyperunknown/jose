@@ -19,16 +19,16 @@ final class RSA
     /**
      * Integer-to-Octet-String primitive.
      *
-     * @param \Jose\Util\BigInteger $x
+     * @param BigInteger $x
      * @param int                   $xLen
      *
      * @return string
      */
-    private static function convertIntegerToOctetString($x, $xLen)
+    private static function convertIntegerToOctetString(BigInteger $x, int $xLen): string
     {
         $x = $x->toBytes();
         if (strlen($x) > $xLen) {
-            return false;
+            throw new \InvalidArgumentException('Invalid data');
         }
 
         return str_pad($x, $xLen, chr(0), STR_PAD_LEFT);
@@ -39,9 +39,9 @@ final class RSA
      *
      * @param string $x
      *
-     * @return \Jose\Util\BigInteger
+     * @return BigInteger
      */
-    private static function convertOctetStringToInteger($x)
+    private static function convertOctetStringToInteger(string $x): BigInteger
     {
         return BigInteger::createFromBinaryString($x);
     }
@@ -50,12 +50,12 @@ final class RSA
      * Exponentiate with or without Chinese Remainder Theorem.
      * Operation with primes 'p' and 'q' is appox. 2x faster.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param \Jose\Util\BigInteger     $c
+     * @param RSAKey $key
+     * @param BigInteger     $c
      *
-     * @return \Jose\Util\BigInteger
+     * @return BigInteger
      */
-    private static function exponentiate(RSAKey $key, BigInteger $c)
+    private static function exponentiate(RSAKey $key, BigInteger $c): BigInteger
     {
         if ($key->isPublic() || empty($key->getPrimes())) {
             return $c->modPow($key->getExponent(), $key->getModulus());
@@ -78,15 +78,15 @@ final class RSA
     /**
      * RSA EP.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param \Jose\Util\BigInteger     $m
+     * @param RSAKey     $key
+     * @param BigInteger $m
      *
-     * @return \Jose\Util\BigInteger|false
+     * @return BigInteger
      */
-    private static function getRSAEP(RSAKey $key, BigInteger $m)
+    private static function getRSAEP(RSAKey $key, BigInteger $m): BigInteger
     {
         if ($m->compare(BigInteger::createFromDecimal(0)) < 0 || $m->compare($key->getModulus()) > 0) {
-            return false;
+            throw new \InvalidArgumentException('Unable to get the RSA EP');
         }
 
         return self::exponentiate($key, $m);
@@ -95,15 +95,15 @@ final class RSA
     /**
      * RSA DP.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param \Jose\Util\BigInteger     $c
+     * @param RSAKey     $key
+     * @param BigInteger $c
      *
-     * @return \Jose\Util\BigInteger|false
+     * @return BigInteger
      */
-    private static function getRSADP(RSAKey $key, BigInteger $c)
+    private static function getRSADP(RSAKey $key, BigInteger $c): BigInteger
     {
         if ($c->compare(BigInteger::createFromDecimal(0)) < 0 || $c->compare($key->getModulus()) > 0) {
-            return false;
+            throw new \InvalidArgumentException('Unable to get the RSA DP');
         }
 
         return self::exponentiate($key, $c);
@@ -112,15 +112,15 @@ final class RSA
     /**
      * RSA SP1.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param \Jose\Util\BigInteger     $m
+     * @param RSAKey     $key
+     * @param BigInteger $m
      *
-     * @return \Jose\Util\BigInteger|false
+     * @return BigInteger
      */
-    private static function getRSASP1(RSAKey $key, BigInteger $m)
+    private static function getRSASP1(RSAKey $key, BigInteger $m): BigInteger
     {
         if ($m->compare(BigInteger::createFromDecimal(0)) < 0 || $m->compare($key->getModulus()) > 0) {
-            return false;
+            throw new \InvalidArgumentException('Unable to get the RSA SP');
         }
 
         return self::exponentiate($key, $m);
@@ -129,15 +129,15 @@ final class RSA
     /**
      * RSAVP1.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param \Jose\Util\BigInteger     $s
+     * @param RSAKey $key
+     * @param BigInteger     $s
      *
-     * @return \Jose\Util\BigInteger|false
+     * @return BigInteger
      */
     private static function getRSAVP1(RSAKey $key, BigInteger $s)
     {
         if ($s->compare(BigInteger::createFromDecimal(0)) < 0 || $s->compare($key->getModulus()) > 0) {
-            return false;
+            throw new \InvalidArgumentException('Unable to get the RSA VP1');
         }
 
         return self::exponentiate($key, $s);
@@ -146,13 +146,13 @@ final class RSA
     /**
      * MGF1.
      *
-     * @param string          $mgfSeed
-     * @param int             $maskLen
-     * @param \Jose\Util\Hash $mgfHash
+     * @param string $mgfSeed
+     * @param int    $maskLen
+     * @param Hash   $mgfHash
      *
      * @return string
      */
-    private static function getMGF1($mgfSeed, $maskLen, Hash $mgfHash)
+    private static function getMGF1(string $mgfSeed, int $maskLen, Hash $mgfHash): string
     {
         $t = '';
         $count = ceil($maskLen / $mgfHash->getLength());
@@ -167,13 +167,13 @@ final class RSA
     /**
      * RSAES-OAEP-ENCRYPT.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param string                    $m
-     * @param \Jose\Util\Hash           $hash
+     * @param RSAKey $key
+     * @param string $m
+     * @param Hash   $hash
      *
      * @return string
      */
-    private static function encryptRSAESOAEP(RSAKey $key, $m, Hash $hash)
+    private static function encryptRSAESOAEP(RSAKey $key, string $m, Hash $hash): string
     {
         $mLen = mb_strlen($m, '8bit');
         $lHash = $hash->hash('');
@@ -196,17 +196,16 @@ final class RSA
     /**
      * RSAES-OAEP-DECRYPT.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param string                    $c
-     * @param \Jose\Util\Hash           $hash
+     * @param RSAKey $key
+     * @param string $c
+     * @param Hash   $hash
      *
      * @return string
      */
-    private static function getRSAESOAEP(RSAKey $key, $c, Hash $hash)
+    private static function getRSAESOAEP(RSAKey $key, string $c, Hash $hash): string
     {
         $c = self::convertOctetStringToInteger($c);
         $m = self::getRSADP($key, $c);
-        Assertion::isInstanceOf($m, BigInteger::class);
         $em = self::convertIntegerToOctetString($m, $key->getModulusLength());
         $lHash = $hash->hash('');
         $maskedSeed = mb_substr($em, 1, $hash->getLength(), '8bit');
@@ -227,13 +226,13 @@ final class RSA
     /**
      * EMSA-PSS-ENCODE.
      *
-     * @param string          $m
-     * @param int             $emBits
-     * @param \Jose\Util\Hash $hash
+     * @param string $m
+     * @param int    $emBits
+     * @param Hash   $hash
      *
-     * @return string|bool
+     * @return string
      */
-    private static function encodeEMSAPSS($m, $emBits, Hash $hash)
+    private static function encodeEMSAPSS(string $m, int $emBits, Hash $hash): string
     {
         $emLen = ($emBits + 1) >> 3;
         $sLen = $hash->getLength();
@@ -255,14 +254,14 @@ final class RSA
     /**
      * EMSA-PSS-VERIFY.
      *
-     * @param string          $m
-     * @param string          $em
-     * @param int             $emBits
-     * @param \Jose\Util\Hash $hash
+     * @param string $m
+     * @param string $em
+     * @param int    $emBits
+     * @param Hash   $hash
      *
      * @return bool
      */
-    private static function verifyEMSAPSS($m, $em, $emBits, Hash $hash)
+    private static function verifyEMSAPSS(string $m, string $em, int $emBits, Hash $hash): bool
     {
         $emLen = ($emBits + 1) >> 3;
         $sLen = $hash->getLength();
@@ -289,13 +288,13 @@ final class RSA
     /**
      * Encryption.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param string                    $plaintext
-     * @param string                    $hash_algorithm
+     * @param RSAKey $key
+     * @param string $plaintext
+     * @param string $hash_algorithm
      *
      * @return string
      */
-    public static function encrypt(RSAKey $key, $plaintext, $hash_algorithm)
+    public static function encrypt(RSAKey $key, string $plaintext, string $hash_algorithm): string
     {
         /*
          * @var Hash
@@ -315,13 +314,13 @@ final class RSA
     /**
      * Decryption.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param string                    $ciphertext
-     * @param string                    $hash_algorithm
+     * @param RSAKey $key
+     * @param string $ciphertext
+     * @param string $hash_algorithm
      *
      * @return string
      */
-    public static function decrypt(RSAKey $key, $ciphertext, $hash_algorithm)
+    public static function decrypt(RSAKey $key, string $ciphertext, string $hash_algorithm): string
     {
         Assertion::greaterThan($key->getModulusLength(), 0);
         $hash = Hash::$hash_algorithm();
@@ -339,13 +338,13 @@ final class RSA
     /**
      * Create a signature.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param string                    $message
-     * @param string                    $hash
+     * @param RSAKey $key
+     * @param string $message
+     * @param string $hash
      *
      * @return string
      */
-    public static function sign(RSAKey $key, $message, $hash)
+    public static function sign(RSAKey $key, string $message, string $hash): string
     {
         Assertion::string($message);
         Assertion::string($hash);
@@ -354,7 +353,6 @@ final class RSA
         Assertion::string($em);
         $message = self::convertOctetStringToInteger($em);
         $signature = self::getRSASP1($key, $message);
-        Assertion::isInstanceOf($signature, BigInteger::class);
 
         return self::convertIntegerToOctetString($signature, $key->getModulusLength());
     }
@@ -362,24 +360,20 @@ final class RSA
     /**
      * Verifies a signature.
      *
-     * @param \Jose\KeyConverter\RSAKey $key
-     * @param string                    $message
-     * @param string                    $signature
-     * @param string                    $hash
+     * @param RSAKey $key
+     * @param string $message
+     * @param string $signature
+     * @param string $hash
      *
      * @return bool
      */
-    public static function verify(RSAKey $key, $message, $signature, $hash)
+    public static function verify(RSAKey $key, string $message, string $signature, string $hash): bool
     {
-        Assertion::string($message);
-        Assertion::string($signature);
-        Assertion::string($hash);
         Assertion::inArray($hash, ['sha256', 'sha384', 'sha512']);
         Assertion::eq(strlen($signature), $key->getModulusLength());
         $modBits = 8 * $key->getModulusLength();
         $s2 = self::convertOctetStringToInteger($signature);
         $m2 = self::getRSAVP1($key, $s2);
-        Assertion::isInstanceOf($m2, BigInteger::class);
         $em = self::convertIntegerToOctetString($m2, $modBits >> 3);
 
         return self::verifyEMSAPSS($message, $em, $modBits - 1, Hash::$hash());
