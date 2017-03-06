@@ -13,6 +13,12 @@ namespace Jose;
 
 use Assert\Assertion;
 use Base64Url\Base64Url;
+use Jose\Algorithm\SignatureAlgorithmInterface;
+use Jose\Factory\AlgorithmManagerFactory;
+use Jose\Object\JWKInterface;
+use Jose\Object\JWSInterface;
+use Jose\Object\Signature;
+use Jose\Object\SignatureInterface;
 
 final class Signer
 {
@@ -23,19 +29,21 @@ final class Signer
     /**
      * Signer constructor.
      *
-     * @param string[]|\Jose\Algorithm\SignatureAlgorithmInterface[] $signature_algorithms
+     * @param string[]|SignatureAlgorithmInterface[] $signature_algorithms
      */
     public function __construct(array $signature_algorithms)
     {
         $this->setSignatureAlgorithms($signature_algorithms);
 
-        $this->setJWAManager(Factory\AlgorithmManagerFactory::createAlgorithmManager($signature_algorithms));
+        $this->setJWAManager(AlgorithmManagerFactory::createAlgorithmManager($signature_algorithms));
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $signature_algorithms
+     *
+     * @return Signer
      */
-    public static function createSigner(array $signature_algorithms)
+    public static function createSigner(array $signature_algorithms): Signer
     {
         $signer = new self($signature_algorithms);
 
@@ -43,9 +51,9 @@ final class Signer
     }
 
     /**
-     * {@inheritdoc}
+     * @param JWSInterface $jws
      */
-    public function sign(Object\JWSInterface &$jws)
+    public function sign(JWSInterface &$jws)
     {
         $nb_signatures = $jws->countSignatures();
 
@@ -55,10 +63,10 @@ final class Signer
     }
 
     /**
-     * @param \Jose\Object\JWSInterface       $jws
-     * @param \Jose\Object\SignatureInterface $signature
+     * @param JWSInterface       $jws
+     * @param SignatureInterface $signature
      */
-    private function computeSignature(Object\JWSInterface $jws, Object\SignatureInterface &$signature)
+    private function computeSignature(JWSInterface $jws, SignatureInterface &$signature)
     {
         if (null === $signature->getSignatureKey()) {
             return;
@@ -74,7 +82,7 @@ final class Signer
             $input
         );
 
-        $signature = Object\Signature::createSignatureFromLoadedData(
+        $signature = Signature::createSignatureFromLoadedData(
             $value,
             $signature->getEncodedProtectedHeaders(),
             $signature->getHeaders()
@@ -82,12 +90,12 @@ final class Signer
     }
 
     /**
-     * @param \Jose\Object\JWSInterface       $jws
-     * @param \Jose\Object\SignatureInterface $signature
+     * @param JWSInterface       $jws
+     * @param SignatureInterface $signature
      *
      * @return string
      */
-    private function getInputToSign(Object\JWSInterface $jws, Object\SignatureInterface $signature)
+    private function getInputToSign(JWSInterface $jws, SignatureInterface $signature): string
     {
         $this->checkB64HeaderAndCrit($signature);
         $encoded_protected_headers = $signature->getEncodedProtectedHeaders();
@@ -102,11 +110,11 @@ final class Signer
     }
 
     /**
-     * @param \Jose\Object\SignatureInterface $signature
+     * @param SignatureInterface $signature
      *
      * @throws \InvalidArgumentException
      */
-    private function checkB64HeaderAndCrit(Object\SignatureInterface $signature)
+    private function checkB64HeaderAndCrit(SignatureInterface $signature)
     {
         if (!$signature->hasProtectedHeader('b64')) {
             return;
@@ -118,12 +126,12 @@ final class Signer
     }
 
     /**
-     * @param array                     $complete_header The complete header
-     * @param \Jose\Object\JWKInterface $key
+     * @param array        $complete_header The complete header
+     * @param JWKInterface $key
      *
-     * @return \Jose\Algorithm\SignatureAlgorithmInterface
+     * @return SignatureAlgorithmInterface
      */
-    private function getSignatureAlgorithm(array $complete_header, Object\JWKInterface $key)
+    private function getSignatureAlgorithm(array $complete_header, JWKInterface $key): SignatureAlgorithmInterface
     {
         Assertion::keyExists($complete_header, 'alg', 'No "alg" parameter set in the header.');
 
@@ -133,7 +141,7 @@ final class Signer
         );
 
         $signature_algorithm = $this->getJWAManager()->getAlgorithm($complete_header['alg']);
-        Assertion::isInstanceOf($signature_algorithm, Algorithm\SignatureAlgorithmInterface::class, sprintf('The algorithm "%s" is not supported.', $complete_header['alg']));
+        Assertion::isInstanceOf($signature_algorithm, SignatureAlgorithmInterface::class, sprintf('The algorithm "%s" is not supported.', $complete_header['alg']));
 
         return $signature_algorithm;
     }
