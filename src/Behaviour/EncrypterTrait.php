@@ -36,12 +36,12 @@ trait EncrypterTrait
     abstract protected function checkKeyAlgorithm(Object\JWKInterface $key, $algorithm);
 
     /**
-     * @return \Jose\Algorithm\JWAManagerInterface
+     * @return Algorithm\JWAManager
      */
     abstract protected function getJWAManager();
 
     /**
-     * @return \Jose\Compression\CompressionManagerInterface
+     * @return CompressionManager
      */
     abstract protected function getCompressionManager();
 
@@ -121,7 +121,7 @@ trait EncrypterTrait
     /**
      * @param \Jose\Object\JWEInterface $jwe
      *
-     * @return \Jose\Compression\CompressionInterface|null
+     * @return Compression\CompressionInterface|null
      */
     private function getCompressionMethod(Object\JWEInterface $jwe)
     {

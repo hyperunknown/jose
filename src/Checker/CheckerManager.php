@@ -17,20 +17,20 @@ use Jose\Object;
 /**
  * Class CheckerManager.
  */
-class CheckerManager implements CheckerManagerInterface
+final class CheckerManager
 {
     /**
-     * @var \Jose\Checker\ClaimCheckerInterface[]
+     * @var ClaimCheckerInterface[]
      */
     private $claim_checkers = [];
 
     /**
-     * @var \Jose\Checker\HeaderCheckerInterface[]
+     * @var HeaderCheckerInterface[]
      */
     private $header_checkers = [];
 
     /**
-     * @param \Jose\Object\JWTInterface $jwt
+     * @param Object\JWTInterface $jwt
      *
      * @return string[]
      */
@@ -76,7 +76,7 @@ class CheckerManager implements CheckerManagerInterface
     }
 
     /**
-     * @param \Jose\Checker\ClaimCheckerInterface $claim_checker
+     * @param ClaimCheckerInterface $claim_checker
      */
     public function addClaimChecker(ClaimCheckerInterface $claim_checker)
     {
@@ -84,7 +84,7 @@ class CheckerManager implements CheckerManagerInterface
     }
 
     /**
-     * @param \Jose\Checker\HeaderCheckerInterface $header_checker
+     * @param HeaderCheckerInterface $header_checker
      */
     public function addHeaderChecker(HeaderCheckerInterface $header_checker)
     {

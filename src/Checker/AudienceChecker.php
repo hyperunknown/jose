@@ -14,7 +14,7 @@ namespace Jose\Checker;
 use Assert\Assertion;
 use Jose\Object\JWTInterface;
 
-class AudienceChecker implements ClaimCheckerInterface
+final class AudienceChecker implements ClaimCheckerInterface
 {
     /**
      * @var string
@@ -26,7 +26,7 @@ class AudienceChecker implements ClaimCheckerInterface
      *
      * @param string $audience
      */
-    public function __construct($audience)
+    public function __construct(string $audience)
     {
         $this->audience = $audience;
     }
@@ -34,7 +34,7 @@ class AudienceChecker implements ClaimCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkClaim(JWTInterface $jwt)
+    public function checkClaim(JWTInterface $jwt): array
     {
         if (!$jwt->hasClaim('aud')) {
             return [];

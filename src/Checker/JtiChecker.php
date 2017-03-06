@@ -19,7 +19,7 @@ abstract class JtiChecker implements ClaimCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkClaim(JWTInterface $jwt)
+    public function checkClaim(JWTInterface $jwt): array
     {
         if (!$jwt->hasClaim('jti')) {
             return [];
@@ -36,5 +36,5 @@ abstract class JtiChecker implements ClaimCheckerInterface
      *
      * @return bool
      */
-    abstract protected function isJtiValid($jti);
+    abstract protected function isJtiValid(string $jti): bool;
 }

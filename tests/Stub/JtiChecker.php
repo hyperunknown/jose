@@ -13,12 +13,12 @@ namespace Jose\Test\Stub;
 
 use Jose\Checker\JtiChecker as Base;
 
-class JtiChecker extends Base
+final class JtiChecker extends Base
 {
     /**
      * {@inheritdoc}
      */
-    protected function isJtiValid($jti)
+    protected function isJtiValid(string $jti): bool
     {
         return in_array($jti, ['JTI1', 'JTI2']);
     }

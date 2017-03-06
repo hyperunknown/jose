@@ -14,12 +14,12 @@ namespace Jose\Checker;
 use Assert\Assertion;
 use Jose\Object\JWTInterface;
 
-class ExpirationTimeChecker implements ClaimCheckerInterface
+final class ExpirationTimeChecker implements ClaimCheckerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function checkClaim(JWTInterface $jwt)
+    public function checkClaim(JWTInterface $jwt): array
     {
         if (!$jwt->hasClaim('exp')) {
             return [];

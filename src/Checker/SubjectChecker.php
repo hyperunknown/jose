@@ -19,7 +19,7 @@ abstract class SubjectChecker implements ClaimCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkClaim(JWTInterface $jwt)
+    public function checkClaim(JWTInterface $jwt): array
     {
         if (!$jwt->hasClaim('sub')) {
             return [];
@@ -36,5 +36,5 @@ abstract class SubjectChecker implements ClaimCheckerInterface
      *
      * @return bool
      */
-    abstract protected function isSubjectAllowed($subject);
+    abstract protected function isSubjectAllowed(string $subject): bool;
 }

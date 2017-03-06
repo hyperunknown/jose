@@ -20,7 +20,7 @@ final class CompressionManagerFactory
     /**
      * @param string[]|\Jose\Compression\CompressionInterface[] $methods
      *
-     * @return \Jose\Compression\CompressionManagerInterface
+     * @return CompressionManager
      */
     public static function createCompressionManager(array $methods)
     {

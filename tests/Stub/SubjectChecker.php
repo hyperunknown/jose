@@ -13,12 +13,12 @@ namespace Jose\Test\Stub;
 
 use Jose\Checker\SubjectChecker as Base;
 
-class SubjectChecker extends Base
+final class SubjectChecker extends Base
 {
     /**
      * {@inheritdoc}
      */
-    protected function isSubjectAllowed($subject)
+    protected function isSubjectAllowed(string $subject): bool
     {
         return in_array($subject, ['SUB1', 'SUB2']);
     }

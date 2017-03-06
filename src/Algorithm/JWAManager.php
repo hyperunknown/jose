@@ -14,15 +14,17 @@ namespace Jose\Algorithm;
 /**
  * Class JWAManager.
  */
-final class JWAManager implements JWAManagerInterface
+final class JWAManager
 {
     /**
      * @var array
      */
-    protected $algorithms = [];
+    private $algorithms = [];
 
     /**
-     * {@inheritdoc}
+     * @param string $algorithm
+     *
+     * @return bool
      */
     public function isAlgorithmSupported(string $algorithm): bool
     {
@@ -30,7 +32,7 @@ final class JWAManager implements JWAManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
     public function getAlgorithms(): array
     {
@@ -38,7 +40,7 @@ final class JWAManager implements JWAManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
     public function listAlgorithms(): array
     {
@@ -46,7 +48,8 @@ final class JWAManager implements JWAManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $algorithm
+     * @return JWAInterface|null
      */
     public function getAlgorithm(string $algorithm): ?JWAInterface
     {
@@ -54,7 +57,7 @@ final class JWAManager implements JWAManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param JWAInterface $algorithm
      */
     public function addAlgorithm(JWAInterface $algorithm)
     {

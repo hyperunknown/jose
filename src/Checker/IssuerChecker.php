@@ -19,7 +19,7 @@ abstract class IssuerChecker implements ClaimCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkClaim(JWTInterface $jwt)
+    public function checkClaim(JWTInterface $jwt): array
     {
         if (!$jwt->hasClaim('iss')) {
             return [];
@@ -36,5 +36,5 @@ abstract class IssuerChecker implements ClaimCheckerInterface
      *
      * @return bool
      */
-    abstract protected function isIssuerAllowed($issuer);
+    abstract protected function isIssuerAllowed(string $issuer): bool;
 }

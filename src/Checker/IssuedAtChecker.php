@@ -14,12 +14,12 @@ namespace Jose\Checker;
 use Assert\Assertion;
 use Jose\Object\JWTInterface;
 
-class IssuedAtChecker implements ClaimCheckerInterface
+final class IssuedAtChecker implements ClaimCheckerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function checkClaim(JWTInterface $jwt)
+    public function checkClaim(JWTInterface $jwt): array
     {
         if (!$jwt->hasClaim('iat')) {
             return [];

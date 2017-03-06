@@ -48,7 +48,7 @@ final class Deflate implements CompressionInterface
     /**
      * {@inheritdoc}
      */
-    public function getMethodName()
+    public function getMethodName(): string
     {
         return 'DEF';
     }
@@ -56,7 +56,7 @@ final class Deflate implements CompressionInterface
     /**
      * {@inheritdoc}
      */
-    public function compress($data)
+    public function compress(string $data): string
     {
         $data = gzdeflate($data, $this->getCompressionLevel());
         Assertion::false(false === $data, 'Unable to compress data');
@@ -67,7 +67,7 @@ final class Deflate implements CompressionInterface
     /**
      * {@inheritdoc}
      */
-    public function uncompress($data)
+    public function uncompress(string $data): string
     {
         $data = gzinflate($data);
         Assertion::false(false === $data, 'Unable to uncompress data');

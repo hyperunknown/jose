@@ -13,7 +13,6 @@ namespace Jose\Factory;
 
 use Assert\Assertion;
 use Jose\Checker\CheckerManager;
-use Jose\Checker\CheckerManagerInterface;
 use Jose\Checker\ClaimCheckerInterface;
 use Jose\Checker\HeaderCheckerInterface;
 
@@ -23,7 +22,7 @@ final class CheckerManagerFactory
      * @param string[]|\Jose\Checker\ClaimCheckerInterface[]  $claims
      * @param string[]|\Jose\Checker\HeaderCheckerInterface[] $headers
      *
-     * @return \Jose\Checker\CheckerManagerInterface
+     * @return CheckerManager
      */
     public static function createClaimCheckerManager(array $claims = ['exp', 'iat', 'nbf'], array $headers = ['crit'])
     {
@@ -36,10 +35,10 @@ final class CheckerManagerFactory
     }
 
     /**
-     * @param \Jose\Checker\CheckerManagerInterface $checker_manager
+     * @param CheckerManager $checker_manager
      * @param array                                 $claims
      */
-    private static function populateClaimCheckers(CheckerManagerInterface &$checker_manager, array $claims)
+    private static function populateClaimCheckers(CheckerManager &$checker_manager, array $claims)
     {
         foreach ($claims as $claim) {
             if ($claim instanceof ClaimCheckerInterface) {
@@ -53,10 +52,10 @@ final class CheckerManagerFactory
     }
 
     /**
-     * @param \Jose\Checker\CheckerManagerInterface $checker_manager
+     * @param CheckerManager $checker_manager
      * @param array                                 $headers
      */
-    private static function populateHeaderCheckers(CheckerManagerInterface &$checker_manager, array $headers)
+    private static function populateHeaderCheckers(CheckerManager &$checker_manager, array $headers)
     {
         foreach ($headers as $claim) {
             if ($claim instanceof HeaderCheckerInterface) {
