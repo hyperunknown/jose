@@ -14,7 +14,7 @@ use Jose\Loader;
 use Jose\Object\JWK;
 use Jose\Object\JWSInterface;
 use Jose\Signer;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * Class NoneSignatureTest.
@@ -22,7 +22,7 @@ use Jose\Test\TestCase;
  * @group None
  * @group Unit
  */
-class NoneSignatureTest extends TestCase
+class NoneSignatureTest extends TestBase
 {
     public function testNoneSignAndVerifyAlgorithm()
     {

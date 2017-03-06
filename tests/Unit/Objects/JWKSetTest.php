@@ -12,7 +12,7 @@
 use Jose\Factory\JWKFactory;
 use Jose\Object\JWKInterface;
 use Jose\Object\JWKSetInterface;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * Class JWKTest.
@@ -20,7 +20,7 @@ use Jose\Test\TestCase;
  * @group Unit
  * @group JWKSet
  */
-class JWKSetTest extends TestCase
+class JWKSetTest extends TestBase
 {
     public function testKeySelection()
     {

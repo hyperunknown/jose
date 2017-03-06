@@ -26,9 +26,11 @@ abstract class AESGCM implements ContentEncryptionAlgorithmInterface
             $calculated_aad .= '.'.$aad;
         }
 
-        list($cyphertext, $tag) = GCM::encrypt($cek, $iv, $data, $calculated_aad);
+        $mode = $this->getMode($cek);
+        $tag = null;
+        $tag_length = 128;
 
-        return $cyphertext;
+        return openssl_encrypt($data, $mode, $cek, OPENSSL_RAW_DATA, $iv, $tag, $calculated_aad, $tag_length / 8);
     }
 
     /**
@@ -41,7 +43,9 @@ abstract class AESGCM implements ContentEncryptionAlgorithmInterface
             $calculated_aad .= '.'.$aad;
         }
 
-        return GCM::decrypt($cek, $iv, $data, $calculated_aad, $tag);
+        $mode = $this->getMode($cek);
+
+        return openssl_decrypt($data, $mode, $cek, OPENSSL_RAW_DATA, $iv, $tag, $calculated_aad);
     }
 
     /**
@@ -64,4 +68,16 @@ abstract class AESGCM implements ContentEncryptionAlgorithmInterface
      * @return int
      */
     abstract protected function getKeySize();
+
+    /**
+     * @param string $kek
+     *
+     * @return string
+     */
+    private function getMode(string $kek): string
+    {
+        $key_length = mb_strlen($kek, '8bit') * 8;
+
+        return 'aes-'.($key_length).'-gcm';
+    }
 }

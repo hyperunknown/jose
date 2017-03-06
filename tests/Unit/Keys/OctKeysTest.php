@@ -10,13 +10,13 @@
  */
 
 use Jose\Factory\JWKFactory;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * @group OctKeys
  * @group Unit
  */
-class OctKeysTest extends TestCase
+class OctKeysTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

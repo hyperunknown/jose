@@ -17,14 +17,14 @@ use Jose\Decrypter;
 use Jose\Loader;
 use Jose\Object\JWEInterface;
 use Jose\Object\JWK;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * Class RSAKeyEncryptionTest.
  *
  * @group Unit
  */
-class RSAKeyEncryptionTest extends TestCase
+class RSAKeyEncryptionTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

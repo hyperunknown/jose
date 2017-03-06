@@ -15,14 +15,14 @@ use Jose\Object\JWK;
 use Jose\Object\JWKSet;
 use Jose\Object\JWSInterface;
 use Jose\Signer;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 use Jose\Verifier;
 
 /**
  * @group Signer
  * @group Functional
  */
-class SignerTest extends TestCase
+class SignerTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

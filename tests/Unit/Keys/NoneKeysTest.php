@@ -11,13 +11,13 @@
 
 use Jose\Factory\JWKFactory;
 use Jose\Object\JWK;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * @group NoneKeys
  * @group Unit
  */
-class NoneKeysTest extends TestCase
+class NoneKeysTest extends TestBase
 {
     /**
      * @see https://tools.ietf.org/html/rfc7638#section-3.1

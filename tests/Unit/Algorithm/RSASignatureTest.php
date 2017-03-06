@@ -24,7 +24,7 @@ use Jose\Object\JWEInterface;
 use Jose\Object\JWK;
 use Jose\Object\JWSInterface;
 use Jose\Signer;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 use Jose\Verifier;
 
 /**
@@ -33,7 +33,7 @@ use Jose\Verifier;
  * @group RSA
  * @group Unit
  */
-class RSASignatureTest extends TestCase
+class RSASignatureTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

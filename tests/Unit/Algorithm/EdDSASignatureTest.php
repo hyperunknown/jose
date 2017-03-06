@@ -15,7 +15,7 @@ use Jose\Factory\JWSFactory;
 use Jose\Loader;
 use Jose\Object\JWK;
 use Jose\Object\JWSInterface;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 use Jose\Verifier;
 
 /**
@@ -24,7 +24,7 @@ use Jose\Verifier;
  * @group EdDSA
  * @group Unit
  */
-class EdDSASignatureTest extends TestCase
+class EdDSASignatureTest extends TestBase
 {
     /**
      * @see https://tools.ietf.org/html/draft-ietf-jose-cfrg-curves-00#appendix-A.5

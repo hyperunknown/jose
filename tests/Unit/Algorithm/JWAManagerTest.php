@@ -13,7 +13,7 @@ use Jose\Algorithm\JWAInterface;
 use Jose\Algorithm\JWAManager;
 use Jose\Algorithm\Signature\ES384;
 use Jose\Factory\AlgorithmManagerFactory;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * Class JWAManagerTest.
@@ -21,7 +21,7 @@ use Jose\Test\TestCase;
  * @group JWA
  * @group Unit
  */
-class JWAManagerTest extends TestCase
+class JWAManagerTest extends TestBase
 {
     public function testAlgorithmIsSupported()
     {

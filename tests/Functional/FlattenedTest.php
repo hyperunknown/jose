@@ -13,14 +13,14 @@ use Jose\Decrypter;
 use Jose\Loader;
 use Jose\Object\JWEInterface;
 use Jose\Object\JWSInterface;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * Class FlattenedTest.
  *
  * @group Functional
  */
-class FlattenedTest extends TestCase
+class FlattenedTest extends TestBase
 {
     /**
      * @see https://tools.ietf.org/html/rfc7516#appendix-A.5

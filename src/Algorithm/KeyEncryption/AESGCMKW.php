@@ -11,7 +11,6 @@
 
 namespace Jose\Algorithm\KeyEncryption;
 
-use AESGCM\AESGCM;
 use Assert\Assertion;
 use Base64Url\Base64Url;
 use Jose\Object\JWKInterface;
@@ -31,7 +30,12 @@ abstract class AESGCMKW implements KeyWrappingInterface
         $iv = random_bytes(96 / 8);
         $additional_headers['iv'] = Base64Url::encode($iv);
 
-        list($encrypted_cek, $tag) = AESGCM::encrypt($kek, $iv, $cek, null);
+        $mode = $this->getMode($kek);
+        $tag = null;
+        $tag_length = 128;
+        $encrypted_cek = openssl_encrypt($cek, $mode, $kek, OPENSSL_RAW_DATA, $iv, $tag, null, $tag_length / 8);
+        Assertion::true(false !== $encrypted_cek, 'Unable to encrypt the data.');
+
         $additional_headers['tag'] = Base64Url::encode($tag);
 
         return $encrypted_cek;
@@ -48,8 +52,9 @@ abstract class AESGCMKW implements KeyWrappingInterface
         $kek = Base64Url::decode($key->get('k'));
         $tag = Base64Url::decode($header['tag']);
         $iv = Base64Url::decode($header['iv']);
+        $mode = $this->getMode($kek);
 
-        return AESGCM::decrypt($kek, $iv, $encrypted_cek, null, $tag);
+        return openssl_decrypt($encrypted_cek, $mode, $kek, OPENSSL_RAW_DATA, $iv, $tag, null);
     }
 
     /**
@@ -82,4 +87,16 @@ abstract class AESGCMKW implements KeyWrappingInterface
      * @return int
      */
     abstract protected function getKeySize();
+
+    /**
+     * @param string $kek
+     *
+     * @return string
+     */
+    private function getMode(string $kek): string
+    {
+        $key_length = mb_strlen($kek, '8bit') * 8;
+
+        return 'aes-'.($key_length).'-gcm';
+    }
 }

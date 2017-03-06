@@ -12,14 +12,14 @@
 use Base64Url\Base64Url;
 use Jose\Algorithm\KeyEncryption\Dir;
 use Jose\Object\JWK;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * Class DirAlgorithmTest.
  *
  * @group Unit
  */
-class DirAlgorithmTest extends TestCase
+class DirAlgorithmTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

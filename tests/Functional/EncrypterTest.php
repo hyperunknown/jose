@@ -18,7 +18,7 @@ use Jose\Object\JWEInterface;
 use Jose\Object\JWK;
 use Jose\Object\JWKSet;
 use Jose\Test\Stub\FakeLogger;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * Class EncrypterTest.
@@ -26,7 +26,7 @@ use Jose\Test\TestCase;
  * @group Encrypter
  * @group Functional
  */
-class EncrypterTest extends TestCase
+class EncrypterTest extends TestBase
 {
     public function testEncryptWithJWTInput()
     {

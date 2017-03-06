@@ -11,13 +11,13 @@
 
 use Jose\Factory\JWSFactory;
 use Jose\Object\JWK;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * @group CheckerManager
  * @group Functional
  */
-class CheckerManagerTest extends TestCase
+class CheckerManagerTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

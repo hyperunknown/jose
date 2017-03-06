@@ -12,13 +12,13 @@
 use Jose\Factory\JWKFactory;
 use Jose\KeyConverter\RSAKey;
 use Jose\Object\JWK;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * @group RSAKeys
  * @group Unit
  */
-class RSAKeysTest extends TestCase
+class RSAKeysTest extends TestBase
 {
     /**
      * @see https://tools.ietf.org/html/rfc7638#section-3.1

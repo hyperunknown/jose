@@ -11,13 +11,13 @@
 
 use Jose\KeyConverter\ECKey;
 use Jose\KeyConverter\KeyConverter;
-use Jose\Test\TestCase;
+use Jose\Test\TestBase;
 
 /**
  * @group ECKeys
  * @group Unit
  */
-class ECKeysTest extends TestCase
+class ECKeysTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

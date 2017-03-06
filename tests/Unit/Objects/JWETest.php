@@ -11,13 +11,15 @@
 
 use Jose\Factory\JWEFactory;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class JWETest.
  *
  * @group JWE
  * @group Unit
  */
-class JWETest extends \PHPUnit_Framework_TestCase
+class JWETest extends TestCase
 {
     public function testJWE()
     {
