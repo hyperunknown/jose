@@ -19,29 +19,29 @@ interface KeyAgreementWrappingInterface extends KeyEncryptionAlgorithmInterface
     /**
      * Wrap the agreement key.
      *
-     * @param \Jose\Object\JWKInterface $receiver_key             The receiver's key
-     * @param string                    $cek                      The CEK to wrap
-     * @param int                       $encryption_key_length    Size of the key expected for the algorithm used for data encryption
-     * @param array                     $complete_header          The complete header of the JWT
-     * @param array                     $additional_header_values Set additional header values if needed
+     * @param JWKInterface $receiver_key             The receiver's key
+     * @param string       $cek                      The CEK to wrap
+     * @param int          $encryption_key_length    Size of the key expected for the algorithm used for data encryption
+     * @param array        $complete_header          The complete header of the JWT
+     * @param array        $additional_header_values Set additional header values if needed
      *
      * @throws \Exception If key does not support the algorithm or if the key usage does not authorize the operation
      *
      * @return string The encrypted CEK
      */
-    public function wrapAgreementKey(JWKInterface $receiver_key, $cek, $encryption_key_length, array $complete_header, array &$additional_header_values);
+    public function wrapAgreementKey(JWKInterface $receiver_key, string $cek, int $encryption_key_length, array $complete_header, array &$additional_header_values): string;
 
     /**
      * Unwrap the agreement key.
      *
-     * @param \Jose\Object\JWKInterface $receiver_key          The receiver's key
-     * @param string                    $encrypted_cek         The encrypted CEK
-     * @param int                       $encryption_key_length Size of the key expected for the algorithm used for data encryption
-     * @param array                     $complete_header       The complete header of the JWT
+     * @param JWKInterface $receiver_key          The receiver's key
+     * @param string       $encrypted_cek         The encrypted CEK
+     * @param int          $encryption_key_length Size of the key expected for the algorithm used for data encryption
+     * @param array        $complete_header       The complete header of the JWT
      *
      * @throws \Exception If key does not support the algorithm or if the key usage does not authorize the operation
      *
      * @return string The decrypted CEK
      */
-    public function unwrapAgreementKey(JWKInterface $receiver_key, $encrypted_cek, $encryption_key_length, array $complete_header);
+    public function unwrapAgreementKey(JWKInterface $receiver_key, string $encrypted_cek, int $encryption_key_length, array $complete_header): string;
 }

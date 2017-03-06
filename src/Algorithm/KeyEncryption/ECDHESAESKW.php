@@ -21,7 +21,7 @@ abstract class ECDHESAESKW implements KeyAgreementWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function wrapAgreementKey(JWKInterface $receiver_key, $cek, $encryption_key_length, array $complete_header, array &$additional_header_values)
+    public function wrapAgreementKey(JWKInterface $receiver_key, string $cek, int $encryption_key_length, array $complete_header, array &$additional_header_values): string
     {
         $ecdh_es = new ECDHES();
 
@@ -34,7 +34,7 @@ abstract class ECDHESAESKW implements KeyAgreementWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function unwrapAgreementKey(JWKInterface $receiver_key, $encrypted_cek, $encryption_key_length, array $complete_header)
+    public function unwrapAgreementKey(JWKInterface $receiver_key, string $encrypted_cek, int $encryption_key_length, array $complete_header): string
     {
         $ecdh_es = new ECDHES();
 
@@ -47,7 +47,7 @@ abstract class ECDHESAESKW implements KeyAgreementWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function getKeyManagementMode()
+    public function getKeyManagementMode(): string
     {
         return self::MODE_WRAP;
     }
@@ -60,5 +60,5 @@ abstract class ECDHESAESKW implements KeyAgreementWrappingInterface
     /**
      * @return int
      */
-    abstract protected function getKeyLength();
+    abstract protected function getKeyLength(): int;
 }

@@ -19,6 +19,7 @@ use Jose\Object\JWKInterface;
 use Jose\Util\ConcatKDF;
 use Mdanter\Ecc\Crypto\EcDH\EcDH;
 use Mdanter\Ecc\EccFactory;
+use Mdanter\Ecc\Primitives\GeneratorPoint;
 
 /**
  * Class ECDHES.
@@ -28,7 +29,7 @@ final class ECDHES implements KeyAgreementInterface
     /**
      * {@inheritdoc}
      */
-    public function getAgreementKey($encryption_key_length, $algorithm, JWKInterface $recipient_key, array $complete_header = [], array &$additional_header_values = [])
+    public function getAgreementKey(int $encryption_key_length, string $algorithm, JWKInterface $recipient_key, array $complete_header = [], array &$additional_header_values = []): string
     {
         if ($recipient_key->has('d')) {
             $this->checkKey($recipient_key, true);
@@ -70,9 +71,9 @@ final class ECDHES implements KeyAgreementInterface
      *
      * @throws \InvalidArgumentException
      *
-     * @return int|string|void
+     * @return string
      */
-    public function calculateAgreementKey(JWKInterface $private_key, JWKInterface $public_key)
+    public function calculateAgreementKey(JWKInterface $private_key, JWKInterface $public_key): string
     {
         switch ($public_key->get('crv')) {
             case 'P-256':
@@ -105,7 +106,7 @@ final class ECDHES implements KeyAgreementInterface
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'ECDH-ES';
     }
@@ -113,7 +114,7 @@ final class ECDHES implements KeyAgreementInterface
     /**
      * {@inheritdoc}
      */
-    public function getKeyManagementMode()
+    public function getKeyManagementMode(): string
     {
         return self::MODE_AGREEMENT;
     }
@@ -121,9 +122,9 @@ final class ECDHES implements KeyAgreementInterface
     /**
      * @param array $complete_header
      *
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
-    private function getPublicKey(array $complete_header)
+    private function getPublicKey(array $complete_header): JWKInterface
     {
         Assertion::keyExists($complete_header, 'epk', 'The header parameter "epk" is missing');
         Assertion::isArray($complete_header['epk'], 'The header parameter "epk" is not an array of parameter');
@@ -135,10 +136,10 @@ final class ECDHES implements KeyAgreementInterface
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $key
-     * @param bool                      $is_private
+     * @param JWKInterface $key
+     * @param bool         $is_private
      */
-    private function checkKey(JWKInterface $key, $is_private)
+    private function checkKey(JWKInterface $key, bool $is_private)
     {
         Assertion::true($key->has('x'), 'The key parameter "x" is missing.');
         Assertion::true($key->has('crv'), 'The key parameter "crv" is missing.');
@@ -166,9 +167,9 @@ final class ECDHES implements KeyAgreementInterface
      *
      * @throws \InvalidArgumentException
      *
-     * @return \Mdanter\Ecc\Primitives\GeneratorPoint
+     * @return GeneratorPoint
      */
-    private function getGenerator(JWKInterface $key)
+    private function getGenerator(JWKInterface $key): GeneratorPoint
     {
         $crv = $key->get('crv');
 
@@ -187,9 +188,9 @@ final class ECDHES implements KeyAgreementInterface
     /**
      * @param string $value
      *
-     * @return resource
+     * @return \GMP
      */
-    private function convertBase64ToGmp($value)
+    private function convertBase64ToGmp(string $value): \GMP
     {
         $value = unpack('H*', Base64Url::decode($value));
 
@@ -197,11 +198,11 @@ final class ECDHES implements KeyAgreementInterface
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return string
      */
-    private function convertDecToBin($value)
+    private function convertDecToBin(string $value): string
     {
         $value = gmp_strval($value, 10);
         $adapter = EccFactory::getAdapter();

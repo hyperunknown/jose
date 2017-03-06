@@ -29,7 +29,7 @@ final class ECDHESA128KW extends ECDHESAESKW
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'ECDH-ES+A128KW';
     }
@@ -37,7 +37,7 @@ final class ECDHESA128KW extends ECDHESAESKW
     /**
      * {@inheritdoc}
      */
-    protected function getKeyLength()
+    protected function getKeyLength(): int
     {
         return 128;
     }
