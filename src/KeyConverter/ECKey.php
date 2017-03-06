@@ -13,6 +13,7 @@ namespace Jose\KeyConverter;
 
 use Assert\Assertion;
 use Base64Url\Base64Url;
+use FG\ASN1\Exception\ParserException;
 use FG\ASN1\ExplicitlyTaggedObject;
 use FG\ASN1\Object;
 use FG\ASN1\Universal\BitString;
@@ -35,7 +36,7 @@ final class ECKey extends Sequence
     private $values = [];
 
     /**
-     * @param \Jose\Object\JWKInterface|string|array $data
+     * @param JWKInterface|string|array $data
      */
     public function __construct($data)
     {
@@ -57,11 +58,11 @@ final class ECKey extends Sequence
      * @param string $data
      *
      * @throws \Exception
-     * @throws \FG\ASN1\Exception\ParserException
+     * @throws ParserException
      *
      * @return array
      */
-    private function loadPEM($data)
+    private function loadPEM(string $data): ?array
     {
         $data = base64_decode(preg_replace('#-.*-|\r|\n#', '', $data));
         $asnObject = Object::fromBinary($data);
@@ -85,7 +86,7 @@ final class ECKey extends Sequence
      *
      * @return array
      */
-    private function loadPKCS8(array $children)
+    private function loadPKCS8(array $children): array
     {
         $binary = hex2bin($children[2]->getContent());
         $asnObject = Object::fromBinary($binary);
@@ -99,7 +100,7 @@ final class ECKey extends Sequence
      *
      * @return bool
      */
-    private function isPKCS8(array $children)
+    private function isPKCS8(array $children): bool
     {
         if (3 !== count($children)) {
             return false;
@@ -192,7 +193,7 @@ final class ECKey extends Sequence
     }
 
     /**
-     * @param \FG\ASN1\Object $children
+     * @param Object $children
      */
     private function verifyVersion(Object $children)
     {
@@ -201,11 +202,11 @@ final class ECKey extends Sequence
     }
 
     /**
-     * @param \FG\ASN1\Object $children
+     * @param Object $children
      * @param string|null     $x
      * @param string|null     $y
      */
-    private function getXAndY(Object $children, &$x, &$y)
+    private function getXAndY(Object $children, ?string &$x, ?string &$y)
     {
         Assertion::isInstanceOf($children, ExplicitlyTaggedObject::class, 'Unable to load the key');
         Assertion::isArray($children->getContent(), 'Unable to load the key');
@@ -221,13 +222,13 @@ final class ECKey extends Sequence
     }
 
     /**
-     * @param \FG\ASN1\Object $children
+     * @param Object $children
      *
      * @return string
      */
     private function getD(Object $children)
     {
-        Assertion::isInstanceOf($children, '\FG\ASN1\Universal\OctetString', 'Unable to load the key');
+        Assertion::isInstanceOf($children, OctetString::class, 'Unable to load the key');
 
         return $children->getContent();
     }
@@ -262,17 +263,17 @@ final class ECKey extends Sequence
     /**
      * @return bool
      */
-    public function isPrivate()
+    public function isPrivate(): bool
     {
         return $this->private;
     }
 
     /**
-     * @param \Jose\KeyConverter\ECKey $private
+     * @param ECKey $private
      *
-     * @return \Jose\KeyConverter\ECKey
+     * @return ECKey
      */
-    public static function toPublic(ECKey $private)
+    public static function toPublic(ECKey $private): ECKey
     {
         $data = $private->toArray();
         if (array_key_exists('d', $data)) {
@@ -285,7 +286,7 @@ final class ECKey extends Sequence
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toPEM();
     }
@@ -293,7 +294,7 @@ final class ECKey extends Sequence
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->values;
     }
@@ -301,7 +302,7 @@ final class ECKey extends Sequence
     /**
      * @return string
      */
-    public function toDER()
+    public function toDER(): string
     {
         return $this->getBinary();
     }
@@ -309,7 +310,7 @@ final class ECKey extends Sequence
     /**
      * @return string
      */
-    public function toPEM()
+    public function toPEM(): string
     {
         $result = '-----BEGIN '.($this->private ? 'EC PRIVATE' : 'PUBLIC').' KEY-----'.PHP_EOL;
         $result .= chunk_split(base64_encode($this->getBinary()), 64, PHP_EOL);
@@ -323,7 +324,7 @@ final class ECKey extends Sequence
      *
      * @return string
      */
-    private function getOID($curve)
+    private function getOID(string $curve): string
     {
         $curves = $this->getSupportedCurves();
         $oid = array_key_exists($curve, $curves) ? $curves[$curve] : null;
@@ -338,7 +339,7 @@ final class ECKey extends Sequence
      *
      * @return string
      */
-    private function getCurve($oid)
+    private function getCurve(string $oid): string
     {
         $curves = $this->getSupportedCurves();
         $curve = array_search($oid, $curves, true);
@@ -350,7 +351,7 @@ final class ECKey extends Sequence
     /**
      * @return array
      */
-    private function getSupportedCurves()
+    private function getSupportedCurves(): array
     {
         return [
             'P-256' => '1.2.840.10045.3.1.7',

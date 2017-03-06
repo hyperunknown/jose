@@ -26,7 +26,7 @@ final class KeyConverter
      *
      * @return array
      */
-    public static function loadKeyFromCertificateFile($file)
+    public static function loadKeyFromCertificateFile(string $file): array
     {
         Assertion::true(file_exists($file), sprintf('File "%s" does not exist.', $file));
         $content = file_get_contents($file);
@@ -41,7 +41,7 @@ final class KeyConverter
      *
      * @return array
      */
-    public static function loadKeyFromCertificate($certificate)
+    public static function loadKeyFromCertificate(string $certificate): array
     {
         try {
             $res = openssl_x509_read($certificate);
@@ -64,8 +64,9 @@ final class KeyConverter
      *
      * @return array
      */
-    public static function loadKeyFromX509Resource($res)
+    public static function loadKeyFromX509Resource($res): array
     {
+        Assertion::true(is_resource($res));
         $key = openssl_get_publickey($res);
 
         $details = openssl_pkey_get_details($key);
@@ -96,7 +97,7 @@ final class KeyConverter
      *
      * @return array
      */
-    public static function loadFromKeyFile($file, $password = null)
+    public static function loadFromKeyFile(string $file, ?string $password = null): array
     {
         $content = file_get_contents($file);
 
@@ -111,7 +112,7 @@ final class KeyConverter
      *
      * @return array
      */
-    public static function loadFromKey($key, $password = null)
+    public static function loadFromKey(string $key, ?string $password = null): array
     {
         try {
             return self::loadKeyFromDER($key, $password);
@@ -128,7 +129,7 @@ final class KeyConverter
      *
      * @return array
      */
-    private static function loadKeyFromDER($der, $password = null)
+    private static function loadKeyFromDER(string $der, ?string $password = null): array
     {
         $pem = self::convertDerToPem($der);
 
@@ -143,7 +144,7 @@ final class KeyConverter
      *
      * @return array
      */
-    private static function loadKeyFromPEM($pem, $password = null)
+    private static function loadKeyFromPEM(string $pem, ?string $password = null): array
     {
         if (preg_match('#DEK-Info: (.+),(.+)#', $pem, $matches)) {
             $pem = self::decodePem($pem, $matches, $password);
@@ -180,7 +181,7 @@ final class KeyConverter
      *
      * @param string $pem
      */
-    private static function sanitizePEM(&$pem)
+    private static function sanitizePEM(string &$pem)
     {
         preg_match_all('#(-.*-)#', $pem, $matches, PREG_PATTERN_ORDER);
         $ciphertext = preg_replace('#-.*-|\r|\n| #', '', $pem);
@@ -195,7 +196,7 @@ final class KeyConverter
      *
      * @return array
      */
-    public static function loadFromX5C(array $x5c)
+    public static function loadFromX5C(array $x5c): array
     {
         $certificate = null;
         $last_issuer = null;
@@ -246,7 +247,7 @@ final class KeyConverter
      *
      * @return string
      */
-    private static function decodePem($pem, array $matches, $password = null)
+    private static function decodePem(string $pem, array $matches, ?string $password = null): string
     {
         Assertion::notNull($password, 'Password required for encrypted keys.');
 
@@ -274,7 +275,7 @@ final class KeyConverter
      *
      * @return string
      */
-    private static function convertDerToPem($der_data)
+    private static function convertDerToPem(string $der_data): string
     {
         $pem = chunk_split(base64_encode($der_data), 64, PHP_EOL);
         $pem = '-----BEGIN CERTIFICATE-----'.PHP_EOL.$pem.'-----END CERTIFICATE-----'.PHP_EOL;
@@ -289,7 +290,7 @@ final class KeyConverter
      *
      * @return string
      */
-    private static function calculateX509Fingerprint($pem, $algorithm, $binary = false)
+    private static function calculateX509Fingerprint(string $pem, string $algorithm, bool $binary = false): string
     {
         $pem = preg_replace('#-.*-|\r|\n#', '', $pem);
         $bin = base64_decode($pem);
