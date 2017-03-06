@@ -21,6 +21,7 @@ use Jose\KeyConverter\ECKey;
 use Jose\Object\JWKInterface;
 use Mdanter\Ecc\Crypto\Signature\Signature;
 use Mdanter\Ecc\EccFactory;
+use Mdanter\Ecc\Primitives\GeneratorPoint;
 use Mdanter\Ecc\Random\RandomGeneratorFactory;
 
 /**
@@ -31,7 +32,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function sign(JWKInterface $key, $data)
+    public function sign(JWKInterface $key, string $data): string
     {
         $this->checkKey($key);
         Assertion::true($key->has('d'), 'The EC key is not private');
@@ -49,7 +50,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
      *
      * @return string
      */
-    private function getOpenSSLSignature(JWKInterface $key, $data)
+    private function getOpenSSLSignature(JWKInterface $key, string $data): string
     {
         $pem = (new ECKey($key))->toPEM();
         $result = openssl_sign($data, $signature, $pem, $this->getHashAlgorithm());
@@ -74,7 +75,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
      *
      * @return string
      */
-    private function getPHPECCSignature(JWKInterface $key, $data)
+    private function getPHPECCSignature(JWKInterface $key, string $data): string
     {
         $p = $this->getGenerator();
         $d = $this->convertBase64ToGmp($key->get('d'));
@@ -98,7 +99,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function verify(JWKInterface $key, $data, $signature)
+    public function verify(JWKInterface $key, string $data, string $signature): bool
     {
         $this->checkKey($key);
 
@@ -125,7 +126,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
      *
      * @return bool
      */
-    private function verifyOpenSSLSignature(JWKInterface $key, $data, $R, $S)
+    private function verifyOpenSSLSignature(JWKInterface $key, string $data, string $R, string $S): bool
     {
         $pem = ECKey::toPublic(new ECKey($key))->toPEM();
 
@@ -146,7 +147,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
      *
      * @return bool
      */
-    private function verifyPHPECCSignature(JWKInterface $key, $data, $R, $S)
+    private function verifyPHPECCSignature(JWKInterface $key, string $data, string $R, string $S): bool
     {
         $p = $this->getGenerator();
         $x = $this->convertBase64ToGmp($key->get('x'));
@@ -168,34 +169,36 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     }
 
     /**
-     * @return \Mdanter\Ecc\Primitives\GeneratorPoint
+     * @return GeneratorPoint
      */
-    abstract protected function getGenerator();
+    abstract protected function getGenerator(): GeneratorPoint;
 
     /**
      * @return string
      */
-    abstract protected function getHashAlgorithm();
+    abstract protected function getHashAlgorithm(): string;
 
     /**
      * @return int
      */
-    abstract protected function getSignaturePartLength();
+    abstract protected function getSignaturePartLength(): int;
 
     /**
      * @param string $value
      *
      * @return string
      */
-    private function convertHexToBin($value)
+    private function convertHexToBin(string $value): string
     {
         return pack('H*', $value);
     }
 
     /**
      * @param string $value
+     *
+     * @return string
      */
-    private function convertBinToHex($value)
+    private function convertBinToHex(string $value): string
     {
         $value = unpack('H*', $value);
 
@@ -203,11 +206,11 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return string
      */
-    private function convertDecToHex($value)
+    private function convertDecToHex(string $value): string
     {
         $value = gmp_strval($value, 10);
 
@@ -217,19 +220,19 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     /**
      * @param string $value
      *
-     * @return resource
+     * @return \GMP
      */
-    private function convertHexToGmp($value)
+    private function convertHexToGmp(string $value): \GMP
     {
         return gmp_init($value, 16);
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
-     * @return resource
+     * @return \GMP
      */
-    private function convertBase64ToGmp($value)
+    private function convertBase64ToGmp(string $value): \GMP
     {
         $value = unpack('H*', Base64Url::decode($value));
 

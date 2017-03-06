@@ -19,7 +19,7 @@ final class A128GCMKW extends AESGCMKW
     /**
      * {@inheritdoc}
      */
-    protected function getKeySize()
+    protected function getKeySize(): int
     {
         return 128;
     }
@@ -27,7 +27,7 @@ final class A128GCMKW extends AESGCMKW
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'A128GCMKW';
     }

@@ -19,7 +19,7 @@ final class RSA15 extends RSA
     /**
      * {@inheritdoc}
      */
-    protected function getEncryptionMode()
+    protected function getEncryptionMode(): int
     {
         return self::ENCRYPTION_PKCS1;
     }
@@ -29,14 +29,14 @@ final class RSA15 extends RSA
      *
      * @codeCoverageIgnore
      */
-    protected function getHashAlgorithm()
+    protected function getHashAlgorithm(): string
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'RSA1_5';
     }

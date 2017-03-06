@@ -24,7 +24,7 @@ final class JWAManager implements JWAManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isAlgorithmSupported($algorithm)
+    public function isAlgorithmSupported(string $algorithm): bool
     {
         return null !== $this->getAlgorithm($algorithm);
     }
@@ -32,7 +32,7 @@ final class JWAManager implements JWAManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithms()
+    public function getAlgorithms(): array
     {
         return $this->algorithms;
     }
@@ -40,7 +40,7 @@ final class JWAManager implements JWAManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function listAlgorithms()
+    public function listAlgorithms(): array
     {
         return array_keys($this->getAlgorithms());
     }
@@ -48,7 +48,7 @@ final class JWAManager implements JWAManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithm($algorithm)
+    public function getAlgorithm(string $algorithm): ?JWAInterface
     {
         return array_key_exists($algorithm, $this->algorithms) ? $this->algorithms[$algorithm] : null;
     }
@@ -60,23 +60,6 @@ final class JWAManager implements JWAManagerInterface
     {
         if (!$this->isAlgorithmSupported($algorithm->getAlgorithmName())) {
             $this->algorithms[$algorithm->getAlgorithmName()] = $algorithm;
-        }
-    }
-
-    /**
-     * [@inheritdoc}.
-     */
-    public function removeAlgorithm($algorithm)
-    {
-        if ($algorithm instanceof JWAInterface) {
-            $name = $algorithm->getAlgorithmName();
-        } elseif (is_string($algorithm)) {
-            $name = $algorithm;
-        } else {
-            throw new \InvalidArgumentException('Argument must be a string or a JWAInterface object.');
-        }
-        if (array_key_exists($name, $this->algorithms)) {
-            unset($this->algorithms[$name]);
         }
     }
 }

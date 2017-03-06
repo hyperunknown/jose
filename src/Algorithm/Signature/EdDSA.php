@@ -19,12 +19,12 @@ use Jose\Object\JWKInterface;
 /**
  * Class Ed25519.
  */
-class EdDSA implements SignatureAlgorithmInterface
+final class EdDSA implements SignatureAlgorithmInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function sign(JWKInterface $key, $data)
+    public function sign(JWKInterface $key, string $data): string
     {
         $this->checkKey($key);
         Assertion::true($key->has('d'), 'The key is not private');
@@ -43,7 +43,7 @@ class EdDSA implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function verify(JWKInterface $key, $data, $signature)
+    public function verify(JWKInterface $key, string $data, string $signature): bool
     {
         $this->checkKey($key);
 
@@ -71,7 +71,7 @@ class EdDSA implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'EdDSA';
     }

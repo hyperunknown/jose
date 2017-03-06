@@ -29,7 +29,7 @@ final class PBES2HS256A128KW extends PBES2AESKW
     /**
      * {@inheritdoc}
      */
-    protected function getHashAlgorithm()
+    protected function getHashAlgorithm(): string
     {
         return 'sha256';
     }
@@ -37,7 +37,7 @@ final class PBES2HS256A128KW extends PBES2AESKW
     /**
      * {@inheritdoc}
      */
-    protected function getKeySize()
+    protected function getKeySize(): int
     {
         return 16;
     }
@@ -45,7 +45,7 @@ final class PBES2HS256A128KW extends PBES2AESKW
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'PBES2-HS256+A128KW';
     }

@@ -28,7 +28,7 @@ interface KeyEncryptionInterface extends KeyEncryptionAlgorithmInterface
      *
      * @return string The encrypted CEK
      */
-    public function encryptKey(JWKInterface $key, $cek, array $complete_headers, array &$additional_headers);
+    public function encryptKey(JWKInterface $key, string $cek, array $complete_headers, array &$additional_headers): string;
 
     /**
      * Decrypt de CEK.
@@ -41,5 +41,5 @@ interface KeyEncryptionInterface extends KeyEncryptionAlgorithmInterface
      *
      * @return string The decrypted CEK
      */
-    public function decryptKey(JWKInterface $key, $encrypted_cek, array $header);
+    public function decryptKey(JWKInterface $key, string $encrypted_cek, array $header): string;
 }

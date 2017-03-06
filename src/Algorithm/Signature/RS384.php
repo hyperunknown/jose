@@ -19,7 +19,7 @@ final class RS384 extends RSA
     /**
      * @return string
      */
-    protected function getAlgorithm()
+    protected function getAlgorithm(): string
     {
         return 'sha384';
     }
@@ -27,7 +27,7 @@ final class RS384 extends RSA
     /**
      * @return int
      */
-    protected function getSignatureMethod()
+    protected function getSignatureMethod(): int
     {
         return self::SIGNATURE_PKCS1;
     }
@@ -35,7 +35,7 @@ final class RS384 extends RSA
     /**
      * @return string
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'RS384';
     }

@@ -34,7 +34,7 @@ abstract class RSA implements KeyEncryptionInterface
     /**
      * {@inheritdoc}
      */
-    public function encryptKey(JWKInterface $key, $cek, array $complete_headers, array &$additional_headers)
+    public function encryptKey(JWKInterface $key, string $cek, array $complete_headers, array &$additional_headers): string
     {
         $this->checkKey($key);
 
@@ -56,7 +56,7 @@ abstract class RSA implements KeyEncryptionInterface
     /**
      * {@inheritdoc}
      */
-    public function decryptKey(JWKInterface $key, $encrypted_key, array $header)
+    public function decryptKey(JWKInterface $key, string $encrypted_key, array $header): string
     {
         $this->checkKey($key);
         Assertion::true($key->has('d'), 'The key is not a private key');
@@ -79,7 +79,7 @@ abstract class RSA implements KeyEncryptionInterface
     /**
      * {@inheritdoc}
      */
-    public function getKeyManagementMode()
+    public function getKeyManagementMode(): string
     {
         return self::MODE_ENCRYPT;
     }
@@ -95,10 +95,10 @@ abstract class RSA implements KeyEncryptionInterface
     /**
      * @return int
      */
-    abstract protected function getEncryptionMode();
+    abstract protected function getEncryptionMode(): int;
 
     /**
      * @return string
      */
-    abstract protected function getHashAlgorithm();
+    abstract protected function getHashAlgorithm(): string;
 }

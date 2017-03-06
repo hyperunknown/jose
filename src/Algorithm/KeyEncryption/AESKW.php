@@ -23,7 +23,7 @@ abstract class AESKW implements KeyWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function wrapKey(JWKInterface $key, $cek, array $complete_headers, array &$additional_headers)
+    public function wrapKey(JWKInterface $key, string $cek, array $complete_headers, array &$additional_headers): string
     {
         $this->checkKey($key);
         $wrapper = $this->getWrapper();
@@ -34,7 +34,7 @@ abstract class AESKW implements KeyWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function unwrapKey(JWKInterface $key, $encrypted_cek, array $header)
+    public function unwrapKey(JWKInterface $key, string $encrypted_cek, array $header): string
     {
         $this->checkKey($key);
         $wrapper = $this->getWrapper();
@@ -45,7 +45,7 @@ abstract class AESKW implements KeyWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function getKeyManagementMode()
+    public function getKeyManagementMode(): string
     {
         return self::MODE_WRAP;
     }
@@ -63,7 +63,7 @@ abstract class AESKW implements KeyWrappingInterface
     /**
      * @return int
      */
-    abstract protected function getKeySize();
+    abstract protected function getKeySize(): int;
 
     /**
      * @return \AESKW\A128KW|\AESKW\A192KW|\AESKW\A256KW

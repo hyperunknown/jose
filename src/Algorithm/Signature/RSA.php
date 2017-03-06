@@ -25,27 +25,27 @@ abstract class RSA implements SignatureAlgorithmInterface
     /**
      * Probabilistic Signature Scheme.
      */
-    const SIGNATURE_PSS = 1;
+    protected const SIGNATURE_PSS = 1;
 
     /**
      * Use the PKCS#1.
      */
-    const SIGNATURE_PKCS1 = 2;
+    protected const SIGNATURE_PKCS1 = 2;
 
     /**
      * @return mixed
      */
-    abstract protected function getAlgorithm();
+    abstract protected function getAlgorithm(): string;
 
     /**
-     * @return mixed
+     * @return int
      */
-    abstract protected function getSignatureMethod();
+    abstract protected function getSignatureMethod(): int;
 
     /**
      * {@inheritdoc}
      */
-    public function verify(JWKInterface $key, $input, $signature)
+    public function verify(JWKInterface $key, string $input, string $signature): bool
     {
         $this->checkKey($key);
 
@@ -61,7 +61,7 @@ abstract class RSA implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function sign(JWKInterface $key, $input)
+    public function sign(JWKInterface $key, string $input): string
     {
         $this->checkKey($key);
         Assertion::true($key->has('d'), 'The key is not a private key');

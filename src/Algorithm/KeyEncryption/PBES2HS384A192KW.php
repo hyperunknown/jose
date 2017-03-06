@@ -29,7 +29,7 @@ final class PBES2HS384A192KW extends PBES2AESKW
     /**
      * {@inheritdoc}
      */
-    protected function getHashAlgorithm()
+    protected function getHashAlgorithm(): string
     {
         return 'sha384';
     }
@@ -37,7 +37,7 @@ final class PBES2HS384A192KW extends PBES2AESKW
     /**
      * {@inheritdoc}
      */
-    protected function getKeySize()
+    protected function getKeySize(): int
     {
         return 24;
     }
@@ -45,7 +45,7 @@ final class PBES2HS384A192KW extends PBES2AESKW
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'PBES2-HS384+A192KW';
     }

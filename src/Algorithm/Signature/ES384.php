@@ -12,13 +12,14 @@
 namespace Jose\Algorithm\Signature;
 
 use Mdanter\Ecc\EccFactory;
+use Mdanter\Ecc\Primitives\GeneratorPoint;
 
 final class ES384 extends ECDSA
 {
     /**
-     * @return \Mdanter\Ecc\Primitives\GeneratorPoint
+     * @return GeneratorPoint
      */
-    protected function getGenerator()
+    protected function getGenerator(): GeneratorPoint
     {
         return EccFactory::getNistCurves()->generator384();
     }
@@ -26,7 +27,7 @@ final class ES384 extends ECDSA
     /**
      * @return string
      */
-    protected function getHashAlgorithm()
+    protected function getHashAlgorithm(): string
     {
         return 'sha384';
     }
@@ -34,7 +35,7 @@ final class ES384 extends ECDSA
     /**
      * @return int
      */
-    protected function getSignaturePartLength()
+    protected function getSignaturePartLength(): int
     {
         return 96;
     }
@@ -42,7 +43,7 @@ final class ES384 extends ECDSA
     /**
      * @return string
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'ES384';
     }

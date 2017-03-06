@@ -19,7 +19,7 @@ final class RSAOAEP256 extends RSA
     /**
      * {@inheritdoc}
      */
-    public function getEncryptionMode()
+    public function getEncryptionMode(): int
     {
         return self::ENCRYPTION_OAEP;
     }
@@ -27,7 +27,7 @@ final class RSAOAEP256 extends RSA
     /**
      * {@inheritdoc}
      */
-    public function getHashAlgorithm()
+    public function getHashAlgorithm(): string
     {
         return 'sha256';
     }
@@ -35,7 +35,7 @@ final class RSAOAEP256 extends RSA
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'RSA-OAEP-256';
     }

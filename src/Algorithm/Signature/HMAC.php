@@ -25,7 +25,7 @@ abstract class HMAC implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function sign(JWKInterface $key, $input)
+    public function sign(JWKInterface $key, string $input): string
     {
         $this->checkKey($key);
 
@@ -35,7 +35,7 @@ abstract class HMAC implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function verify(JWKInterface $key, $input, $signature)
+    public function verify(JWKInterface $key, string $input, string $signature): bool
     {
         return hash_equals($this->sign($key, $input), $signature);
     }
@@ -52,5 +52,5 @@ abstract class HMAC implements SignatureAlgorithmInterface
     /**
      * @return string
      */
-    abstract protected function getHashAlgorithm();
+    abstract protected function getHashAlgorithm(): string;
 }

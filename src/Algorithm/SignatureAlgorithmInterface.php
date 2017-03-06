@@ -28,7 +28,7 @@ interface SignatureAlgorithmInterface extends JWAInterface
      *
      * @return string
      */
-    public function sign(JWKInterface $key, $input);
+    public function sign(JWKInterface $key, string $input): string;
 
     /**
      * Verify the signature of data.
@@ -41,5 +41,5 @@ interface SignatureAlgorithmInterface extends JWAInterface
      *
      * @return bool
      */
-    public function verify(JWKInterface $key, $input, $signature);
+    public function verify(JWKInterface $key, string $input, string $signature): bool;
 }

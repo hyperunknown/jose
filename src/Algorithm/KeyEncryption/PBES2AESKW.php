@@ -34,8 +34,10 @@ abstract class PBES2AESKW implements KeyWrappingInterface
      * @param int $salt_size
      * @param int $nb_count
      */
-    public function __construct($salt_size = 64, $nb_count = 4096)
+    public function __construct(int $salt_size = 64, int $nb_count = 4096)
     {
+        Assertion::greaterThan($salt_size, 0);
+        Assertion::greaterThan($nb_count, 0);
         $this->salt_size = $salt_size;
         $this->nb_count = $nb_count;
     }
@@ -43,7 +45,7 @@ abstract class PBES2AESKW implements KeyWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function wrapKey(JWKInterface $key, $cek, array $complete_headers, array &$additional_headers)
+    public function wrapKey(JWKInterface $key, string $cek, array $complete_headers, array &$additional_headers): string
     {
         $this->checkKey($key);
         $this->checkHeaderAlgorithm($complete_headers);
@@ -65,7 +67,7 @@ abstract class PBES2AESKW implements KeyWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function unwrapKey(JWKInterface $key, $encrypted_cek, array $header)
+    public function unwrapKey(JWKInterface $key, string $encrypted_cek, array $header): string
     {
         $this->checkKey($key);
         $this->checkHeaderAlgorithm($header);
@@ -85,7 +87,7 @@ abstract class PBES2AESKW implements KeyWrappingInterface
     /**
      * {@inheritdoc}
      */
-    public function getKeyManagementMode()
+    public function getKeyManagementMode(): string
     {
         return self::MODE_WRAP;
     }
@@ -127,10 +129,10 @@ abstract class PBES2AESKW implements KeyWrappingInterface
     /**
      * @return string
      */
-    abstract protected function getHashAlgorithm();
+    abstract protected function getHashAlgorithm(): string;
 
     /**
      * @return int
      */
-    abstract protected function getKeySize();
+    abstract protected function getKeySize(): int;
 }

@@ -29,7 +29,7 @@ final class A192KW extends AESKW
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'A192KW';
     }
@@ -37,7 +37,7 @@ final class A192KW extends AESKW
     /**
      * {@inheritdoc}
      */
-    protected function getKeySize()
+    protected function getKeySize(): int
     {
         return 24;
     }

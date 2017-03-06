@@ -23,7 +23,7 @@ final class None implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function sign(JWKInterface $key, $data)
+    public function sign(JWKInterface $key, string $data): string
     {
         $this->checkKey($key);
 
@@ -33,7 +33,7 @@ final class None implements SignatureAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function verify(JWKInterface $key, $data, $signature)
+    public function verify(JWKInterface $key, string $data, string $signature): bool
     {
         return $signature === $this->sign($key, $data);
     }
@@ -49,7 +49,7 @@ final class None implements SignatureAlgorithmInterface
     /**
      * @return string
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'none';
     }

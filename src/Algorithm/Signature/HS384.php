@@ -23,7 +23,7 @@ final class HS384 extends HMAC
     /**
      * @return string
      */
-    protected function getHashAlgorithm()
+    protected function getHashAlgorithm(): string
     {
         return 'sha384';
     }
@@ -31,7 +31,7 @@ final class HS384 extends HMAC
     /**
      * @return string
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'HS384';
     }
