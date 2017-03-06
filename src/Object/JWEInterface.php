@@ -141,7 +141,7 @@ interface JWEInterface extends JWTInterface
     /**
      * @internal
      *
-     * @return string|null
+     * @return string
      */
     public function getEncodedSharedProtectedHeaders();
 

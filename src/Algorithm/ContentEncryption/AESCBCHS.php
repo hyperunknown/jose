@@ -19,7 +19,7 @@ abstract class AESCBCHS implements ContentEncryptionAlgorithmInterface
     /**
      * {@inheritdoc}
      */
-    public function encryptContent($data, $cek, $iv, $aad, $encoded_protected_header, &$tag)
+    public function encryptContent(string $data, string $cek, string $iv, ?string $aad, string $encoded_protected_header, ?string &$tag): string
     {
         $k = mb_substr($cek, mb_strlen($cek, '8bit') / 2, null, '8bit');
 
@@ -31,17 +31,9 @@ abstract class AESCBCHS implements ContentEncryptionAlgorithmInterface
     }
 
     /**
-     * @param string      $data
-     * @param string      $cek
-     * @param string      $iv
-     * @param string      $aad
-     * @param string      $encoded_protected_header
-     * @param string|null $aad
-     * @param string      $tag
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function decryptContent($data, $cek, $iv, $aad, $encoded_protected_header, $tag)
+    public function decryptContent(string $data, string $cek, string $iv, ?string $aad, string $encoded_protected_header, string $tag): string
     {
         Assertion::true(
             $this->isTagValid($data, $cek, $iv, $aad, $encoded_protected_header, $tag),
@@ -54,15 +46,15 @@ abstract class AESCBCHS implements ContentEncryptionAlgorithmInterface
     }
 
     /**
-     * @param $encrypted_data
-     * @param $cek
-     * @param $iv
-     * @param $aad
-     * @param string $encoded_header
+     * @param string      $encrypted_data
+     * @param string      $cek
+     * @param string      $iv
+     * @param null|string $aad
+     * @param string      $encoded_header
      *
      * @return string
      */
-    protected function calculateAuthenticationTag($encrypted_data, $cek, $iv, $aad, $encoded_header)
+    protected function calculateAuthenticationTag(string $encrypted_data, string $cek, string $iv, ?string $aad, string $encoded_header): string
     {
         $calculated_aad = $encoded_header;
         if (null !== $aad) {
@@ -92,7 +84,7 @@ abstract class AESCBCHS implements ContentEncryptionAlgorithmInterface
      *
      * @return bool
      */
-    protected function isTagValid($encrypted_data, $cek, $iv, $aad, $encoded_header, $authentication_tag)
+    protected function isTagValid(string $encrypted_data, string $cek, string $iv, ?string $aad, string $encoded_header, string $authentication_tag): bool
     {
         return $authentication_tag === $this->calculateAuthenticationTag($encrypted_data, $cek, $iv, $aad, $encoded_header);
     }
@@ -100,12 +92,12 @@ abstract class AESCBCHS implements ContentEncryptionAlgorithmInterface
     /**
      * @return string
      */
-    abstract protected function getHashAlgorithm();
+    abstract protected function getHashAlgorithm(): string;
 
     /**
      * @return int
      */
-    public function getIVSize()
+    public function getIVSize(): int
     {
         return 128;
     }
@@ -115,7 +107,7 @@ abstract class AESCBCHS implements ContentEncryptionAlgorithmInterface
      *
      * @return string
      */
-    private function getMode($k)
+    private function getMode(string $k): string
     {
         return 'aes-'.(8 * mb_strlen($k, '8bit')).'-cbc';
     }

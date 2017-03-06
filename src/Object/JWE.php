@@ -57,9 +57,9 @@ final class JWE implements JWEInterface
     private $shared_protected_headers = [];
 
     /**
-     * @var string|null
+     * @var string
      */
-    private $encoded_shared_protected_headers = null;
+    private $encoded_shared_protected_headers = '';
 
     /**
      * {@inheritdoc}

@@ -19,7 +19,7 @@ final class A256CBCHS512 extends AESCBCHS
     /**
      * {@inheritdoc}
      */
-    protected function getHashAlgorithm()
+    protected function getHashAlgorithm(): string
     {
         return 'sha512';
     }
@@ -27,7 +27,7 @@ final class A256CBCHS512 extends AESCBCHS
     /**
      * {@inheritdoc}
      */
-    public function getCEKSize()
+    public function getCEKSize(): int
     {
         return 512;
     }
@@ -35,7 +35,7 @@ final class A256CBCHS512 extends AESCBCHS
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'A256CBC-HS512';
     }

@@ -19,7 +19,7 @@ final class A256GCM extends AESGCM
     /**
      * {@inheritdoc}
      */
-    protected function getKeySize()
+    protected function getKeySize(): int
     {
         return 256;
     }
@@ -27,7 +27,7 @@ final class A256GCM extends AESGCM
     /**
      * {@inheritdoc}
      */
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return 'A256GCM';
     }

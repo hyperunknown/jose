@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 class A128KWAndA128GCMEncryptionProtectedContentOnlyTest extends TestCase
 {
     /**
-     * Please note that we cannot the encryption and get the same result as the example (IV, TAG and other data are always different).
+     * Please note that we cannot use the encryption and get the same result as the example (IV, TAG and other data are always different).
      * The output given in the RFC is used and only decrypted.
      */
     public function testA128KWAndA128GCMEncryptionProtectedContentOnly()

@@ -21,11 +21,11 @@ interface ContentEncryptionAlgorithmInterface extends JWAInterface
      * @param string      $iv                       The Initialization Vector
      * @param string|null $aad                      Additional Additional Authenticated Data
      * @param string      $encoded_protected_header The Protected Header encoded in Base64Url
-     * @param string      $tag                      Tag
+     * @param string|null $tag                      Tag
      *
      * @return string The encrypted data
      */
-    public function encryptContent($data, $cek, $iv, $aad, $encoded_protected_header, &$tag);
+    public function encryptContent(string $data, string $cek, string $iv, ?string $aad, string $encoded_protected_header, ?string &$tag): string;
 
     /**
      * Decrypt data.
@@ -39,15 +39,15 @@ interface ContentEncryptionAlgorithmInterface extends JWAInterface
      *
      * @return string
      */
-    public function decryptContent($data, $cek, $iv, $aad, $encoded_protected_header, $tag);
+    public function decryptContent(string $data, string $cek, string $iv, ?string $aad, string $encoded_protected_header, string $tag): string;
 
     /**
      * @return int|null
      */
-    public function getIVSize();
+    public function getIVSize(): int;
 
     /**
      * @return int
      */
-    public function getCEKSize();
+    public function getCEKSize(): int;
 }
