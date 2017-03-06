@@ -33,17 +33,17 @@ trait CommonCipheringMethods
     private $compression_methods;
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
-    public function getSupportedKeyEncryptionAlgorithms()
+    public function getSupportedKeyEncryptionAlgorithms(): array
     {
         return $this->key_encryption_algorithms;
     }
 
     /**
-     * @param string[]|\Jose\Algorithm\KeyEncryptionAlgorithmInterface[] $key_encryption_algorithms
+     * @param string[]|KeyEncryptionAlgorithmInterface[] $key_encryption_algorithms
      */
-    private function setKeyEncryptionAlgorithms($key_encryption_algorithms)
+    private function setKeyEncryptionAlgorithms(array $key_encryption_algorithms)
     {
         $result = [];
         foreach ($key_encryption_algorithms as $key_encryption_algorithm) {
@@ -59,17 +59,17 @@ trait CommonCipheringMethods
     }
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
-    public function getSupportedContentEncryptionAlgorithms()
+    public function getSupportedContentEncryptionAlgorithms(): array
     {
         return $this->content_encryption_algorithms;
     }
 
     /**
-     * @param string[]|\Jose\Algorithm\ContentEncryptionAlgorithmInterface[] $content_encryption_algorithms
+     * @param string[]|ContentEncryptionAlgorithmInterface[] $content_encryption_algorithms
      */
-    private function setContentEncryptionAlgorithms($content_encryption_algorithms)
+    private function setContentEncryptionAlgorithms(array $content_encryption_algorithms)
     {
         $result = [];
         foreach ($content_encryption_algorithms as $content_encryption_algorithm) {
@@ -85,17 +85,17 @@ trait CommonCipheringMethods
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function getSupportedCompressionMethods()
+    public function getSupportedCompressionMethods(): array
     {
         return $this->compression_methods;
     }
 
     /**
-     * @param string[]|\Jose\Compression\CompressionInterface[] $compression_methods
+     * @param string[]|CompressionInterface[] $compression_methods
      */
-    private function setCompressionMethods($compression_methods)
+    private function setCompressionMethods(array $compression_methods)
     {
         $result = [];
         foreach ($compression_methods as $compression_method) {

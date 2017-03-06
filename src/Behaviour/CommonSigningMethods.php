@@ -21,17 +21,17 @@ trait CommonSigningMethods
     private $signature_algorithms;
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
-    public function getSupportedSignatureAlgorithms()
+    public function getSupportedSignatureAlgorithms(): array
     {
         return $this->signature_algorithms;
     }
 
     /**
-     * @param string[]|\Jose\Algorithm\SignatureAlgorithmInterface[] $signature_algorithms
+     * @param string[]|SignatureAlgorithmInterface[] $signature_algorithms
      */
-    private function setSignatureAlgorithms($signature_algorithms)
+    private function setSignatureAlgorithms(array $signature_algorithms)
     {
         $result = [];
         foreach ($signature_algorithms as $signature_algorithm) {

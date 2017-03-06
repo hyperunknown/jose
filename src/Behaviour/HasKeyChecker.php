@@ -17,32 +17,26 @@ use Jose\Object\JWKInterface;
 trait HasKeyChecker
 {
     /**
-     * @param \Jose\Object\JWKInterface $key
-     * @param string                    $usage
+     * @param JWKInterface $key
+     * @param string       $usage
      *
      * @throws \InvalidArgumentException
-     *
-     * @return bool
      */
-    protected function checkKeyUsage(JWKInterface $key, $usage)
+    protected function checkKeyUsage(JWKInterface $key, string $usage)
     {
         if ($key->has('use')) {
-            return $this->checkUsage($key, $usage);
+            $this->checkUsage($key, $usage);
         }
         if ($key->has('key_ops')) {
-            return $this->checkOperation($key, $usage);
+            $this->checkOperation($key, $usage);
         }
-
-        return true;
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $key
-     * @param string                    $usage
-     *
-     * @return bool
+     * @param JWKInterface $key
+     * @param string       $usage
      */
-    private function checkOperation(JWKInterface $key, $usage)
+    private function checkOperation(JWKInterface $key, string $usage)
     {
         $ops = $key->get('key_ops');
         if (!is_array($ops)) {
@@ -52,31 +46,29 @@ trait HasKeyChecker
             case 'verification':
                 Assertion::inArray('verify', $ops, 'Key cannot be used to verify a signature');
 
-                return true;
+                return;
             case 'signature':
                 Assertion::inArray('sign', $ops, 'Key cannot be used to sign');
 
-                return true;
+                return;
             case 'encryption':
                 Assertion::true(in_array('encrypt', $ops) || in_array('wrapKey', $ops), 'Key cannot be used to encrypt');
 
-                return true;
+                return;
             case 'decryption':
                 Assertion::true(in_array('decrypt', $ops) || in_array('unwrapKey', $ops), 'Key cannot be used to decrypt');
 
-                return true;
+                return;
             default:
                 throw new \InvalidArgumentException('Unsupported key usage.');
         }
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $key
-     * @param string                    $usage
-     *
-     * @return bool
+     * @param JWKInterface $key
+     * @param string       $usage
      */
-    private function checkUsage(JWKInterface $key, $usage)
+    private function checkUsage(JWKInterface $key, string $usage)
     {
         $use = $key->get('use');
         switch ($usage) {
@@ -84,22 +76,22 @@ trait HasKeyChecker
             case 'signature':
                 Assertion::eq('sig', $use, 'Key cannot be used to sign or verify a signature');
 
-                return true;
+                return;
             case 'encryption':
             case 'decryption':
                 Assertion::eq('enc', $use, 'Key cannot be used to encrypt or decrypt');
 
-                return true;
+                return;
             default:
                 throw new \InvalidArgumentException('Unsupported key usage.');
         }
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $key
-     * @param string                    $algorithm
+     * @param JWKInterface $key
+     * @param string       $algorithm
      */
-    protected function checkKeyAlgorithm(JWKInterface $key, $algorithm)
+    protected function checkKeyAlgorithm(JWKInterface $key, string $algorithm)
     {
         if (!$key->has('alg')) {
             return;

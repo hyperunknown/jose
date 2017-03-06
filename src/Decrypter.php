@@ -67,9 +67,9 @@ final class Decrypter
     /**
      * @param JWEInterface $jwe
      * @param JWKInterface $jwk
-     * @param null $recipient_index
+     * @param int|null $recipient_index
      */
-    public function decryptUsingKey(JWEInterface &$jwe, JWKInterface $jwk, &$recipient_index = null)
+    public function decryptUsingKey(JWEInterface &$jwe, JWKInterface $jwk, ?int &$recipient_index = null)
     {
         $jwk_set = new JWKSet();
         $jwk_set->addKey($jwk);
@@ -104,9 +104,9 @@ final class Decrypter
     /**
      * @param JWEInterface    $jwe
      * @param JWKSetInterface $jwk_set
-     * @param int                          $i
+     * @param int             $i
      *
-     * @return int
+     * @return int|null
      */
     private function decryptRecipientKey(JWEInterface &$jwe, JWKSetInterface $jwk_set, int $i): ?int
     {
