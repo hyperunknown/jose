@@ -22,21 +22,21 @@ final class AlgorithmManagerFactory
      *
      * @return JWAManager
      */
-    public static function createAlgorithmManager(array $algorithms)
+    public static function createAlgorithmManager(array $algorithms): JWAManager
     {
-        $jwa_manager = new JWAManager();
+        $jwaManager = new JWAManager();
 
         foreach ($algorithms as $algorithm) {
             if ($algorithm instanceof JWAInterface) {
-                $jwa_manager->addAlgorithm($algorithm);
+                $jwaManager->addAlgorithm($algorithm);
             } else {
                 Assertion::string($algorithm, 'Bad argument: must be a list with either algorithm names (string) or instances of JWAInterface.');
                 $class = self::getAlgorithmClass($algorithm);
-                $jwa_manager->addAlgorithm(new $class());
+                $jwaManager->addAlgorithm(new $class());
             }
         }
 
-        return $jwa_manager;
+        return $jwaManager;
     }
 
     /**
@@ -44,7 +44,7 @@ final class AlgorithmManagerFactory
      *
      * @return bool
      */
-    private static function isAlgorithmSupported($algorithm)
+    private static function isAlgorithmSupported(string $algorithm): bool
     {
         return array_key_exists($algorithm, self::getSupportedAlgorithms());
     }
@@ -56,7 +56,7 @@ final class AlgorithmManagerFactory
      *
      * @return string
      */
-    private static function getAlgorithmClass($algorithm)
+    private static function getAlgorithmClass(string $algorithm): string
     {
         Assertion::true(self::isAlgorithmSupported($algorithm), sprintf('Algorithm "%s" is not supported.', $algorithm));
 
@@ -66,7 +66,7 @@ final class AlgorithmManagerFactory
     /**
      * @return array
      */
-    private static function getSupportedAlgorithms()
+    private static function getSupportedAlgorithms(): array
     {
         return [
             'HS256'              => '\Jose\Algorithm\Signature\HS256',

@@ -18,25 +18,25 @@ use Jose\Compression\CompressionManager;
 final class CompressionManagerFactory
 {
     /**
-     * @param string[]|\Jose\Compression\CompressionInterface[] $methods
+     * @param string[]|CompressionInterface[] $methods
      *
      * @return CompressionManager
      */
-    public static function createCompressionManager(array $methods)
+    public static function createCompressionManager(array $methods): CompressionManager
     {
-        $compression_manager = new CompressionManager();
+        $compressionManager = new CompressionManager();
 
         foreach ($methods as $method) {
             if ($method instanceof CompressionInterface) {
-                $compression_manager->addCompressionAlgorithm($method);
+                $compressionManager->addCompressionAlgorithm($method);
             } else {
                 Assertion::string($method, 'Bad argument: must be a list with either method names (string) or instances of CompressionInterface.');
                 $class = self::getMethodClass($method);
-                $compression_manager->addCompressionAlgorithm(new $class());
+                $compressionManager->addCompressionAlgorithm(new $class());
             }
         }
 
-        return $compression_manager;
+        return $compressionManager;
     }
 
     /**
@@ -44,7 +44,7 @@ final class CompressionManagerFactory
      *
      * @return bool
      */
-    private static function isAlgorithmSupported($method)
+    private static function isAlgorithmSupported(string $method): bool
     {
         return array_key_exists($method, self::getSupportedMethods());
     }
@@ -56,14 +56,14 @@ final class CompressionManagerFactory
      *
      * @return string
      */
-    private static function getMethodClass($method)
+    private static function getMethodClass(string $method): string
     {
         Assertion::true(self::isAlgorithmSupported($method), sprintf('Compression method "%s" is not supported.', $method));
 
         return self::getSupportedMethods()[$method];
     }
 
-    private static function getSupportedMethods()
+    private static function getSupportedMethods(): array
     {
         return [
             'DEF'  => '\Jose\Compression\Deflate',

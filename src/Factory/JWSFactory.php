@@ -14,14 +14,17 @@ namespace Jose\Factory;
 use Assert\Assertion;
 use Jose\Object\JWKInterface;
 use Jose\Object\JWS;
+use Jose\Object\JWSInterface;
 use Jose\Signer;
 
-final class JWSFactory implements JWSFactoryInterface
+final class JWSFactory
 {
     /**
-     * {@inheritdoc}
+     * @param $payload
+     * @param bool $is_payload_detached
+     * @return JWSInterface
      */
-    public static function createJWS($payload, $is_payload_detached = false)
+    public static function createJWS($payload, bool $is_payload_detached = false): JWSInterface
     {
         $jws = new JWS();
         $jws = $jws->withPayload($payload);
@@ -35,9 +38,12 @@ final class JWSFactory implements JWSFactoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param $payload
+     * @param JWKInterface $signature_key
+     * @param array $protected_headers
+     * @return string
      */
-    public static function createJWSToCompactJSON($payload, JWKInterface $signature_key, array $protected_headers)
+    public static function createJWSToCompactJSON($payload, JWKInterface $signature_key, array $protected_headers): string
     {
         $jws = self::createJWSAndSign($payload, $signature_key, $protected_headers, []);
 
@@ -45,9 +51,12 @@ final class JWSFactory implements JWSFactoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param $payload
+     * @param JWKInterface $signature_key
+     * @param array $protected_headers
+     * @return string
      */
-    public static function createJWSWithDetachedPayloadToCompactJSON($payload, JWKInterface $signature_key, array $protected_headers)
+    public static function createJWSWithDetachedPayloadToCompactJSON($payload, JWKInterface $signature_key, array $protected_headers): string
     {
         $jws = self::createJWSWithDetachedPayloadAndSign($payload, $signature_key, $protected_headers, []);
 
@@ -55,9 +64,13 @@ final class JWSFactory implements JWSFactoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param $payload
+     * @param JWKInterface $signature_key
+     * @param array $protected_headers
+     * @param array $headers
+     * @return string
      */
-    public static function createJWSToFlattenedJSON($payload, JWKInterface $signature_key, array $protected_headers = [], $headers = [])
+    public static function createJWSToFlattenedJSON($payload, JWKInterface $signature_key, array $protected_headers = [], array $headers = []): string
     {
         $jws = self::createJWSAndSign($payload, $signature_key, $protected_headers, $headers);
 
@@ -65,9 +78,13 @@ final class JWSFactory implements JWSFactoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param $payload
+     * @param JWKInterface $signature_key
+     * @param array $protected_headers
+     * @param array $headers
+     * @return string
      */
-    public static function createJWSWithDetachedPayloadToFlattenedJSON($payload, JWKInterface $signature_key, array $protected_headers = [], $headers = [])
+    public static function createJWSWithDetachedPayloadToFlattenedJSON($payload, JWKInterface $signature_key, array $protected_headers = [], $headers = []): string
     {
         $jws = self::createJWSWithDetachedPayloadAndSign($payload, $signature_key, $protected_headers, $headers);
 
@@ -76,12 +93,13 @@ final class JWSFactory implements JWSFactoryInterface
 
     /**
      * @param mixed                     $payload
-     * @param \Jose\Object\JWKInterface $signature_key
+     * @param JWKInterface $signature_key
      * @param array                     $protected_headers
+     * @param array                     $headers
      *
-     * @return \Jose\Object\JWSInterface
+     * @return JWSInterface
      */
-    private static function createJWSAndSign($payload, JWKInterface $signature_key, array $protected_headers = [], $headers = [])
+    private static function createJWSAndSign($payload, JWKInterface $signature_key, array $protected_headers = [], array $headers = []): JWSInterface
     {
         $jws = self::createJWS($payload);
 
@@ -96,13 +114,14 @@ final class JWSFactory implements JWSFactoryInterface
     }
 
     /**
-     * @param mixed                     $payload
-     * @param \Jose\Object\JWKInterface $signature_key
-     * @param array                     $protected_headers
+     * @param mixed        $payload
+     * @param JWKInterface $signature_key
+     * @param array        $protected_headers
+     * @param array        $headers
      *
-     * @return \Jose\Object\JWSInterface
+     * @return JWSInterface
      */
-    private static function createJWSWithDetachedPayloadAndSign($payload, JWKInterface $signature_key, array $protected_headers = [], $headers = [])
+    private static function createJWSWithDetachedPayloadAndSign($payload, JWKInterface $signature_key, array $protected_headers = [], array $headers = []): JWSInterface
     {
         $jws = self::createJWS($payload, true);
 
