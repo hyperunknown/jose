@@ -14,7 +14,7 @@ namespace Jose;
 use Assert\Assertion;
 use Base64Url\Base64Url;
 
-final class Verifier implements VerifierInterface
+final class Verifier
 {
     use Behaviour\HasKeyChecker;
     use Behaviour\HasJWAManager;

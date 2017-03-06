@@ -13,32 +13,32 @@ namespace Jose;
 
 use Assert\Assertion;
 
-final class JWTCreator implements JWTCreatorInterface
+final class JWTCreator
 {
     /**
-     * @var \Jose\EncrypterInterface|null
+     * @var \Jose\Encrypter|null
      */
     private $encrypter = null;
 
     /**
-     * @var \Jose\SignerInterface
+     * @var \Jose\Signer
      */
     private $signer;
 
     /**
      * JWTCreator constructor.
      *
-     * @param \Jose\SignerInterface $signer
+     * @param \Jose\Signer $signer
      */
-    public function __construct(SignerInterface $signer)
+    public function __construct(Signer $signer)
     {
         $this->signer = $signer;
     }
 
     /**
-     * @param \Jose\EncrypterInterface $encrypter
+     * @param \Jose\Encrypter $encrypter
      */
-    public function enableEncryptionSupport(EncrypterInterface $encrypter)
+    public function enableEncryptionSupport(Encrypter $encrypter)
     {
         $this->encrypter = $encrypter;
     }

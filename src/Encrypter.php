@@ -14,7 +14,7 @@ namespace Jose;
 use Assert\Assertion;
 use Base64Url\Base64Url;
 
-final class Encrypter implements EncrypterInterface
+final class Encrypter
 {
     use Behaviour\HasKeyChecker;
     use Behaviour\HasJWAManager;

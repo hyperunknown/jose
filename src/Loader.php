@@ -17,7 +17,7 @@ use Assert\Assertion;
  * Class able to load JWS or JWE.
  * JWS object can also be verified.
  */
-final class Loader implements LoaderInterface
+final class Loader
 {
     /**
      * {@inheritdoc}

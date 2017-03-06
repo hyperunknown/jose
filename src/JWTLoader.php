@@ -14,10 +14,10 @@ namespace Jose;
 use Assert\Assertion;
 use Jose\Checker\CheckerManager;
 
-final class JWTLoader implements JWTLoaderInterface
+final class JWTLoader
 {
     /**
-     * @var \Jose\LoaderInterface
+     * @var \Jose\Loader
      */
     private $loader;
 
@@ -27,12 +27,12 @@ final class JWTLoader implements JWTLoaderInterface
     private $checker_manager;
 
     /**
-     * @var \Jose\DecrypterInterface|null
+     * @var \Jose\Decrypter|null
      */
     private $decrypter = null;
 
     /**
-     * @var \Jose\VerifierInterface
+     * @var \Jose\Verifier
      */
     private $verifier;
 
@@ -40,9 +40,9 @@ final class JWTLoader implements JWTLoaderInterface
      * JWTLoader constructor.
      *
      * @param CheckerManager $checker_manager
-     * @param \Jose\VerifierInterface               $verifier
+     * @param \Jose\Verifier               $verifier
      */
-    public function __construct(Checker\CheckerManager $checker_manager, VerifierInterface $verifier)
+    public function __construct(Checker\CheckerManager $checker_manager, Verifier $verifier)
     {
         $this->checker_manager = $checker_manager;
         $this->verifier = $verifier;
@@ -52,7 +52,7 @@ final class JWTLoader implements JWTLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function enableDecryptionSupport(DecrypterInterface $decrypter)
+    public function enableDecryptionSupport(Decrypter $decrypter)
     {
         $this->decrypter = $decrypter;
     }

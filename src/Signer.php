@@ -14,7 +14,7 @@ namespace Jose;
 use Assert\Assertion;
 use Base64Url\Base64Url;
 
-final class Signer implements SignerInterface
+final class Signer
 {
     use Behaviour\HasKeyChecker;
     use Behaviour\HasJWAManager;
