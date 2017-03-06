@@ -27,10 +27,10 @@
     "require": {
         "php": "^7.1",
         "lib-openssl": "*",
+        "ext-mbstring": "*",
         "spomky-labs/base64url": "^1.0",
         "spomky-labs/aes-key-wrap": "^3.0",
         "beberlei/assert": "^2.4",
-        "symfony/polyfill-mbstring": "^1.1",
         "fgrosse/phpasn1": "^1.5",
         "mdanter/ecc": "^0.4.0",
         "psr/cache": "^1.0"
@@ -41,13 +41,12 @@
         "symfony/cache": "^3.0"
     },
    "suggest":{
-        "ext-crypto": "Highly recommended when you use AES GCM based algorithms.",
         "ext-ed25519": "For EdDSA with Ed25519 curves support.",
         "ext-curve25519": "For EdDSA with X25519 curves support."
    },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.1.x-dev"
+            "dev-master": "7.0.x-dev"
         }
     }
 }
