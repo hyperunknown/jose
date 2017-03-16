@@ -119,7 +119,7 @@ The release process [is described here](doc/Release.md).
 # Prerequisites
 
 This library needs at least:
-* ![PHP 5.6+](https://img.shields.io/badge/PHP-5.6%2B-ff69b4.svg),
+* ![PHP 7.1+](https://img.shields.io/badge/PHP-7.1%2B-ff69b4.svg),
 * OpenSSL extension.
 
 Please consider the following optional requirements:
@@ -132,7 +132,7 @@ As the time needed to perform operation is long compared to the other algorithms
 
 # Continuous Integration
 
-It has been successfully tested using `PHP 5.6`, `PHP 7.0`, `PHP 7.1` and `HHVM` with all algorithms.
+It has been successfully tested using `PHP 7.1` and `HHVM` with all algorithms.
 
 Tests vectors from the [RFC 7520](http://tools.ietf.org/html/rfc7520) are fully implemented and all tests pass.
 
@@ -161,7 +161,7 @@ Please read the [performance page](doc/Performance.md) to know how fast are the 
 # Contributing
 
 Requests for new features, bug fixed and all other ideas to make this library useful are welcome.
-If you feel comfortable writting code, you could try to fix [opened issues where help is wanted](https://github.com/Spomky-Labs/jose/labels/help+wanted) or [those that are easy to fix](https://github.com/Spomky-Labs/jose/labels/easy-pick).
+If you feel comfortable writing code, you could try to fix [opened issues where help is wanted](https://github.com/Spomky-Labs/jose/labels/help+wanted) or [those that are easy to fix](https://github.com/Spomky-Labs/jose/labels/easy-pick).
 
 Do not forget to [follow these best practices](doc/Contributing.md).
 
