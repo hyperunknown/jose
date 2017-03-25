@@ -20,6 +20,7 @@ use Jose\Algorithm\KeyEncryption\KeyEncryptionInterface;
 use Jose\Algorithm\KeyEncryption\KeyWrappingInterface;
 use Jose\Algorithm\KeyEncryptionAlgorithmInterface;
 use Jose\Compression\CompressionInterface;
+use Jose\Compression\CompressionManager;
 use Jose\Object\JWEInterface;
 use Jose\Object\JWKInterface;
 use Jose\Object\Recipient;
@@ -32,8 +33,12 @@ final class Encrypter
      */
     private $jwaManager;
 
+    /**
+     * @var CompressionManager
+     */
+    private $compressionManager;
+
     use Behaviour\HasKeyChecker;
-    use Behaviour\HasCompressionManager;
     use Behaviour\CommonCipheringMethods;
     use Behaviour\EncrypterTrait;
 
@@ -63,7 +68,7 @@ final class Encrypter
         $this->setContentEncryptionAlgorithms($content_encryption_algorithms);
         $this->setCompressionMethods($compression_methods);
         $this->jwaManager = Factory\AlgorithmManagerFactory::createAlgorithmManager(array_merge($key_encryption_algorithms, $content_encryption_algorithms));
-        $this->setCompressionManager(Factory\CompressionManagerFactory::createCompressionManager($compression_methods));
+        $this->compressionManager = Factory\CompressionManagerFactory::createCompressionManager($compression_methods);
     }
 
     /**
@@ -238,5 +243,13 @@ final class Encrypter
     protected function getJWAManager(): JWAManager
     {
         return $this->jwaManager;
+    }
+
+    /**
+     * @return CompressionManager
+     */
+    protected function getCompressionManager(): CompressionManager
+    {
+        return $this->compressionManager;
     }
 }

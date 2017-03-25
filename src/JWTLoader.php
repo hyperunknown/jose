@@ -102,9 +102,10 @@ final class JWTLoader
     }
 
     /**
-     * @param string $assertion
+     * @param string               $assertion
      * @param JWKSetInterface|null $encryption_key_set
-     * @param bool $is_encryption_required
+     * @param bool                 $is_encryption_required
+     *
      * @return JWTInterface
      */
     public function load(string $assertion, ?JWKSetInterface $encryption_key_set = null, bool $is_encryption_required = false): JWTInterface
@@ -126,12 +127,13 @@ final class JWTLoader
     }
 
     /**
-     * @param JWSInterface $jws
+     * @param JWSInterface    $jws
      * @param JWKSetInterface $signature_key_set
-     * @param string|null $detached_payload
-     * @return null
+     * @param string|null     $detached_payload
+     *
+     * @return int
      */
-    public function verify(JWSInterface $jws, JWKSetInterface $signature_key_set, ?string $detached_payload = null)
+    public function verify(JWSInterface $jws, JWKSetInterface $signature_key_set, ?string $detached_payload = null): int
     {
         Assertion::inArray($jws->getSignature(0)->getProtectedHeader('alg'), $this->getSupportedSignatureAlgorithms(), sprintf('The signature algorithm "%s" is not supported or not allowed.', $jws->getSignature(0)->getProtectedHeader('alg')));
 
@@ -149,7 +151,7 @@ final class JWTLoader
      *
      * @return JWSInterface
      */
-    private function decryptAssertion(JWEInterface $jwe, JWKSetInterface $encryption_key_set)
+    private function decryptAssertion(JWEInterface $jwe, JWKSetInterface $encryption_key_set): JWSInterface
     {
         $this->decrypter->decryptUsingKeySet($jwe, $encryption_key_set);
 

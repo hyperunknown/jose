@@ -61,11 +61,11 @@ final class CheckerManager
     }
 
     /**
-     * {@inheritdoc}
+     * @param Object\JWSInterface $jws
+     * @param int                 $signature
      */
-    public function checkJWS(Object\JWSInterface $jws, $signature)
+    public function checkJWS(Object\JWSInterface $jws, int $signature)
     {
-        Assertion::integer($signature);
         Assertion::lessThan($signature, $jws->countSignatures());
 
         $checked_claims = $this->checkJWT($jws);

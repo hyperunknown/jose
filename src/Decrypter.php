@@ -23,6 +23,7 @@ use Jose\Algorithm\KeyEncryption\KeyEncryptionInterface;
 use Jose\Algorithm\KeyEncryption\KeyWrappingInterface;
 use Jose\Algorithm\KeyEncryptionAlgorithmInterface;
 use Jose\Compression\CompressionInterface;
+use Jose\Compression\CompressionManager;
 use Jose\Object\JWEInterface;
 use Jose\Object\JWKInterface;
 use Jose\Object\JWKSet;
@@ -36,8 +37,13 @@ final class Decrypter
      */
     private $jwaManager;
 
+    /**
+     * @var CompressionManager
+     */
+    private $compressionManager;
+
+
     use Behaviour\HasKeyChecker;
-    use Behaviour\HasCompressionManager;
     use Behaviour\CommonCipheringMethods;
 
     /**
@@ -66,7 +72,7 @@ final class Decrypter
         $this->setContentEncryptionAlgorithms($content_encryption_algorithms);
         $this->setCompressionMethods($compression_methods);
         $this->jwaManager = Factory\AlgorithmManagerFactory::createAlgorithmManager(array_merge($key_encryption_algorithms, $content_encryption_algorithms));
-        $this->setCompressionManager(Factory\CompressionManagerFactory::createCompressionManager($compression_methods));
+        $this->compressionManager = Factory\CompressionManagerFactory::createCompressionManager($compression_methods);
     }
 
     /**
@@ -277,7 +283,7 @@ final class Decrypter
      */
     private function getCompressionMethod(string $method): CompressionInterface
     {
-        $compression_method = $this->getCompressionManager()->getCompressionAlgorithm($method);
+        $compression_method = $this->compressionManager->getCompressionAlgorithm($method);
         Assertion::notNull($compression_method, sprintf('Compression method "%s" not supported', $method));
 
         return $compression_method;

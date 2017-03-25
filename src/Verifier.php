@@ -44,6 +44,7 @@ final class Verifier
 
     /**
      * @param array $signature_algorithms
+     *
      * @return Verifier
      */
     public static function createVerifier(array $signature_algorithms): Verifier
@@ -57,7 +58,7 @@ final class Verifier
      * @param JWSInterface $jws
      * @param JWKInterface $jwk
      * @param null|string $detached_payload
-     * @param int|null $recipient_index
+     * @param int|null    $recipient_index
      */
     public function verifyWithKey(JWSInterface $jws, JWKInterface $jwk, ?string $detached_payload = null, ?int &$recipient_index = null)
     {
@@ -68,7 +69,10 @@ final class Verifier
     }
 
     /**
-     * {@inheritdoc}
+     * @param JWSInterface $jws
+     * @param JWKSetInterface $jwk_set
+     * @param null $detached_payload
+     * @param null $recipient_index
      */
     public function verifyWithKeySet(JWSInterface $jws, JWKSetInterface $jwk_set, $detached_payload = null, &$recipient_index = null)
     {
