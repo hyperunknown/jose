@@ -13,6 +13,7 @@ namespace Jose;
 
 use Assert\Assertion;
 use Base64Url\Base64Url;
+use Jose\Algorithm\JWAManager;
 use Jose\Algorithm\SignatureAlgorithmInterface;
 use Jose\Object\JWKInterface;
 use Jose\Object\JWKSet;
@@ -22,8 +23,12 @@ use Jose\Object\SignatureInterface;
 
 final class Verifier
 {
+    /**
+     * @var JWAManager
+     */
+    private $jwaManager;
+
     use Behaviour\HasKeyChecker;
-    use Behaviour\HasJWAManager;
     use Behaviour\CommonSigningMethods;
 
     /**
@@ -34,7 +39,7 @@ final class Verifier
     public function __construct(array $signature_algorithms)
     {
         $this->setSignatureAlgorithms($signature_algorithms);
-        $this->setJWAManager(Factory\AlgorithmManagerFactory::createAlgorithmManager($signature_algorithms));
+        $this->jwaManager = Factory\AlgorithmManagerFactory::createAlgorithmManager($signature_algorithms);
     }
 
     /**
@@ -198,7 +203,7 @@ final class Verifier
         );
         Assertion::keyExists($complete_headers, 'alg', 'No "alg" parameter set in the header.');
 
-        $algorithm = $this->getJWAManager()->getAlgorithm($complete_headers['alg']);
+        $algorithm = $this->jwaManager->getAlgorithm($complete_headers['alg']);
         Assertion::isInstanceOf($algorithm, SignatureAlgorithmInterface::class, sprintf('The algorithm "%s" is not supported or does not implement SignatureInterface.', $complete_headers['alg']));
 
         return $algorithm;

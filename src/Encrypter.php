@@ -14,6 +14,7 @@ namespace Jose;
 use Assert\Assertion;
 use Base64Url\Base64Url;
 use Jose\Algorithm\ContentEncryptionAlgorithmInterface;
+use Jose\Algorithm\JWAManager;
 use Jose\Algorithm\KeyEncryption\KeyAgreementWrappingInterface;
 use Jose\Algorithm\KeyEncryption\KeyEncryptionInterface;
 use Jose\Algorithm\KeyEncryption\KeyWrappingInterface;
@@ -26,8 +27,12 @@ use Jose\Object\RecipientInterface;
 
 final class Encrypter
 {
+    /**
+     * @var JWAManager
+     */
+    private $jwaManager;
+
     use Behaviour\HasKeyChecker;
-    use Behaviour\HasJWAManager;
     use Behaviour\HasCompressionManager;
     use Behaviour\CommonCipheringMethods;
     use Behaviour\EncrypterTrait;
@@ -57,7 +62,7 @@ final class Encrypter
         $this->setKeyEncryptionAlgorithms($key_encryption_algorithms);
         $this->setContentEncryptionAlgorithms($content_encryption_algorithms);
         $this->setCompressionMethods($compression_methods);
-        $this->setJWAManager(Factory\AlgorithmManagerFactory::createAlgorithmManager(array_merge($key_encryption_algorithms, $content_encryption_algorithms)));
+        $this->jwaManager = Factory\AlgorithmManagerFactory::createAlgorithmManager(array_merge($key_encryption_algorithms, $content_encryption_algorithms));
         $this->setCompressionManager(Factory\CompressionManagerFactory::createCompressionManager($compression_methods));
     }
 
@@ -225,5 +230,13 @@ final class Encrypter
     private function getEncryptedKeyFromKeyWrappingAlgorithm(array $complete_headers, string $cek, KeyWrappingInterface $key_encryption_algorithm, JWKInterface $recipient_key, &$additional_headers)
     {
         return $key_encryption_algorithm->wrapKey($recipient_key, $cek, $complete_headers, $additional_headers);
+    }
+
+    /**
+     * @return JWAManager
+     */
+    protected function getJWAManager(): JWAManager
+    {
+        return $this->jwaManager;
     }
 }

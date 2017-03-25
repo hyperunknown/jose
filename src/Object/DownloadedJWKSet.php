@@ -12,7 +12,8 @@
 namespace Jose\Object;
 
 use Assert\Assertion;
-use Psr\Cache\CacheItemPoolInterface;
+use Http\Client\HttpClient;
+use Http\Message\RequestFactory;
 
 /**
  * Class DownloadedJWKSet.
@@ -28,35 +29,25 @@ abstract class DownloadedJWKSet implements JWKSetInterface
     private $url;
 
     /**
-     * @var null|\Psr\Cache\CacheItemPoolInterface
+     * @var HttpClient
      */
-    private $cache;
+    private $client;
 
     /**
-     * @var int
+     * @var RequestFactory
      */
-    private $ttl;
-
-    /**
-     * @var bool
-     */
-    private $allow_unsecured_connection;
+    private $requestFactory;
 
     /**
      * DownloadedJWKSet constructor.
      *
-     * @param string                                 $url
-     * @param \Psr\Cache\CacheItemPoolInterface|null $cache
-     * @param int                                    $ttl
-     * @param bool                                   $allow_unsecured_connection
-     * @param bool                                   $allow_http_connection
+     * @param RequestFactory $requestFactory
+     * @param HttpClient     $client
+     * @param string         $url
+     * @param bool           $allow_http_connection
      */
-    public function __construct($url, CacheItemPoolInterface $cache = null, $ttl = 86400, $allow_unsecured_connection = false, $allow_http_connection = false)
+    public function __construct(RequestFactory $requestFactory, HttpClient $client, string $url, bool $allow_http_connection = false)
     {
-        Assertion::boolean($allow_unsecured_connection);
-        Assertion::boolean($allow_http_connection);
-        Assertion::integer($ttl);
-        Assertion::min($ttl, 0);
         Assertion::false(false === filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED), 'Invalid URL.');
         $allowed_protocols = ['https'];
         if (true === $allow_http_connection) {
@@ -65,9 +56,8 @@ abstract class DownloadedJWKSet implements JWKSetInterface
         Assertion::inArray(mb_substr($url, 0, mb_strpos($url, '://', 0, '8bit'), '8bit'), $allowed_protocols, sprintf('The provided sector identifier URI is not valid: scheme must be one of the following: %s.', json_encode($allowed_protocols)));
 
         $this->url = $url;
-        $this->cache = $cache;
-        $this->ttl = $ttl;
-        $this->allow_unsecured_connection = $allow_unsecured_connection;
+        $this->client = $client;
+        $this->requestFactory = $requestFactory;
     }
 
     /**
@@ -91,49 +81,9 @@ abstract class DownloadedJWKSet implements JWKSetInterface
      */
     protected function getContent()
     {
-        $cache_key = sprintf('JWKFactory-Content-%s', hash('sha512', $this->url));
-        if (null !== $this->cache) {
-            $item = $this->cache->getItem($cache_key);
-            if (!$item->isHit()) {
-                $content = $this->downloadContent();
-                $item->set($content);
-                if (0 !== $this->ttl) {
-                    $item->expiresAfter($this->ttl);
-                }
-                $this->cache->save($item);
-
-                return $content;
-            } else {
-                return $item->get();
-            }
-        }
-
-        return $this->downloadContent();
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     *
-     * @return string
-     */
-    private function downloadContent()
-    {
-        $params = [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_URL            => $this->url,
-        ];
-        if (false === $this->allow_unsecured_connection) {
-            $params[CURLOPT_SSL_VERIFYPEER] = true;
-            $params[CURLOPT_SSL_VERIFYHOST] = 2;
-        }
-
-        $ch = curl_init();
-        curl_setopt_array($ch, $params);
-        $content = curl_exec($ch);
-        curl_close($ch);
-
-        Assertion::false(false === $content, 'Unable to get content.');
-
-        return $content;
+        $request = $this->requestFactory->createRequest('GET', $this->url);
+        $response = $this->client->sendRequest($request);
+        Assertion::true($response->getStatusCode() >= 200 && $response->getStatusCode() < 300, 'Unable to get the content.');
+        return (string) $response->getBody()->getContents();
     }
 }

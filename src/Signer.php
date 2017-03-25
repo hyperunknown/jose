@@ -13,6 +13,7 @@ namespace Jose;
 
 use Assert\Assertion;
 use Base64Url\Base64Url;
+use Jose\Algorithm\JWAManager;
 use Jose\Algorithm\SignatureAlgorithmInterface;
 use Jose\Factory\AlgorithmManagerFactory;
 use Jose\Object\JWKInterface;
@@ -22,8 +23,12 @@ use Jose\Object\SignatureInterface;
 
 final class Signer
 {
+    /**
+     * @var JWAManager
+     */
+    private $jwaManager;
+
     use Behaviour\HasKeyChecker;
-    use Behaviour\HasJWAManager;
     use Behaviour\CommonSigningMethods;
 
     /**
@@ -34,8 +39,7 @@ final class Signer
     public function __construct(array $signature_algorithms)
     {
         $this->setSignatureAlgorithms($signature_algorithms);
-
-        $this->setJWAManager(AlgorithmManagerFactory::createAlgorithmManager($signature_algorithms));
+        $this->jwaManager = AlgorithmManagerFactory::createAlgorithmManager($signature_algorithms);
     }
 
     /**
@@ -140,7 +144,7 @@ final class Signer
             sprintf('The algorithm "%s" is not allowed with this key.', $complete_header['alg'])
         );
 
-        $signature_algorithm = $this->getJWAManager()->getAlgorithm($complete_header['alg']);
+        $signature_algorithm = $this->jwaManager->getAlgorithm($complete_header['alg']);
         Assertion::isInstanceOf($signature_algorithm, SignatureAlgorithmInterface::class, sprintf('The algorithm "%s" is not supported.', $complete_header['alg']));
 
         return $signature_algorithm;

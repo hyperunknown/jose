@@ -15,6 +15,7 @@ use Assert\Assertion;
 use Base64Url\Base64Url;
 use Jose\Algorithm\ContentEncryptionAlgorithmInterface;
 use Jose\Algorithm\JWAInterface;
+use Jose\Algorithm\JWAManager;
 use Jose\Algorithm\KeyEncryption\DirectEncryptionInterface;
 use Jose\Algorithm\KeyEncryption\KeyAgreementInterface;
 use Jose\Algorithm\KeyEncryption\KeyAgreementWrappingInterface;
@@ -30,8 +31,12 @@ use Jose\Object\RecipientInterface;
 
 final class Decrypter
 {
+    /**
+     * @var JWAManager
+     */
+    private $jwaManager;
+
     use Behaviour\HasKeyChecker;
-    use Behaviour\HasJWAManager;
     use Behaviour\HasCompressionManager;
     use Behaviour\CommonCipheringMethods;
 
@@ -60,7 +65,7 @@ final class Decrypter
         $this->setKeyEncryptionAlgorithms($key_encryption_algorithms);
         $this->setContentEncryptionAlgorithms($content_encryption_algorithms);
         $this->setCompressionMethods($compression_methods);
-        $this->setJWAManager(Factory\AlgorithmManagerFactory::createAlgorithmManager(array_merge($key_encryption_algorithms, $content_encryption_algorithms)));
+        $this->jwaManager = Factory\AlgorithmManagerFactory::createAlgorithmManager(array_merge($key_encryption_algorithms, $content_encryption_algorithms));
         $this->setCompressionManager(Factory\CompressionManagerFactory::createCompressionManager($compression_methods));
     }
 
@@ -276,5 +281,13 @@ final class Decrypter
         Assertion::notNull($compression_method, sprintf('Compression method "%s" not supported', $method));
 
         return $compression_method;
+    }
+
+    /**
+     * @return JWAManager
+     */
+    protected function getJWAManager(): JWAManager
+    {
+        return $this->jwaManager;
     }
 }

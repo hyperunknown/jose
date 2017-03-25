@@ -12,8 +12,10 @@
 use Jose\Factory\JWKFactory;
 use Jose\Object\JWKInterface;
 use Jose\Object\JWKSetInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use PHPUnit\Framework\TestCase;
+use Http\Message\MessageFactory\DiactorosMessageFactory;
+use Http\Client\Curl\Client;
+use Http\Message\StreamFactory\DiactorosStreamFactory;
 
 /**
  * Class JWKFactoryTest.
@@ -121,46 +123,28 @@ class JWKFactoryTest extends TestCase
 
     public function testCreateFromJKU()
     {
-        $result = JWKFactory::createFromJKU('https://www.googleapis.com/oauth2/v3/certs');
+        $requestFactory = new DiactorosMessageFactory();
+        $client = new Client(
+            new DiactorosMessageFactory(),
+            new DiactorosStreamFactory()
+        );
+        $result = JWKFactory::createFromJKU($requestFactory, $client, 'https://www.googleapis.com/oauth2/v3/certs');
 
         $this->assertInstanceOf(JWKSetInterface::class, $result);
         $this->assertTrue(0 !== $result->count());
-    }
-
-    public function testCreateFromJKUWithCache()
-    {
-        $url = 'https://www.googleapis.com/oauth2/v3/certs';
-        $cache = new FilesystemAdapter();
-        $cache_key = $this->getCacheKey($url);
-        $cache->clear();
-
-        $result = JWKFactory::createFromJKU($url, false, $cache);
-
-        $this->assertInstanceOf(JWKSetInterface::class, $result);
-        $this->assertTrue(0 !== $result->count());
-        $this->assertTrue($cache->hasItem($cache_key));
     }
 
     public function testCreateFromX5U()
     {
-        $result = JWKFactory::createFromX5U('https://www.googleapis.com/oauth2/v1/certs');
+        $requestFactory = new DiactorosMessageFactory();
+        $client = new Client(
+            new DiactorosMessageFactory(),
+            new DiactorosStreamFactory()
+        );
+        $result = JWKFactory::createFromX5U($requestFactory, $client, 'https://www.googleapis.com/oauth2/v1/certs');
 
         $this->assertInstanceOf(JWKSetInterface::class, $result);
         $this->assertTrue(0 !== $result->count());
-    }
-
-    public function testCreateFromX5UWithCache()
-    {
-        $url = 'https://www.googleapis.com/oauth2/v1/certs';
-        $cache = new FilesystemAdapter();
-        $cache_key = $this->getCacheKey($url);
-        $cache->clear();
-
-        $result = JWKFactory::createFromX5U($url, false, $cache);
-
-        $this->assertInstanceOf(JWKSetInterface::class, $result);
-        $this->assertTrue(0 !== $result->count());
-        $this->assertTrue($cache->hasItem($cache_key));
     }
 
     public function testCreateFromValues()
@@ -176,10 +160,5 @@ class JWKFactoryTest extends TestCase
 
         $this->assertInstanceOf(JWKInterface::class, $result);
         $this->assertEquals('{"kty":"EC","crv":"P-521","d":"Fp6KFKRiHIdR_7PP2VKxz6OkS_phyoQqwzv2I89-8zP7QScrx5r8GFLcN5mCCNJt3rN3SIgI4XoIQbNePlAj6vE","x":"AVpvo7TGpQk5P7ZLo0qkBpaT-fFDv6HQrWElBKMxcrJd_mRNapweATsVv83YON4lTIIRXzgGkmWeqbDr6RQO-1cS","y":"AIs-MoRmLaiPyG2xmPwQCHX2CGX_uCZiT3iOxTAJEZuUbeSA828K4WfAA4ODdGiB87YVShhPOkiQswV3LpbpPGhC"}', json_encode($result));
-    }
-
-    private function getCacheKey($url)
-    {
-        return sprintf('%s-%s', 'JWKFactory-Content', hash('sha512', $url));
     }
 }

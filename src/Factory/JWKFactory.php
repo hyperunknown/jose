@@ -13,6 +13,8 @@ namespace Jose\Factory;
 
 use Assert\Assertion;
 use Base64Url\Base64Url;
+use Http\Client\HttpClient;
+use Http\Message\RequestFactory;
 use Jose\KeyConverter\ECKey;
 use Jose\KeyConverter\KeyConverter;
 use Jose\KeyConverter\RSAKey;
@@ -30,7 +32,6 @@ use Jose\Object\X5UJWKSet;
 use Mdanter\Ecc\Curves\CurveFactory;
 use Mdanter\Ecc\Curves\NistCurve;
 use Mdanter\Ecc\EccFactory;
-use Psr\Cache\CacheItemPoolInterface;
 
 final class JWKFactory
 {
@@ -394,29 +395,29 @@ final class JWKFactory
     }
 
     /**
-     * @param string $jku
-     * @param bool $allow_unsecured_connection
-     * @param CacheItemPoolInterface|null $cache
-     * @param int $ttl
-     * @param bool $allow_http_connection
+     * @param RequestFactory $requestFactory
+     * @param HttpClient     $client
+     * @param string         $jku
+     * @param bool           $allow_http_connection
+     *
      * @return JWKSetInterface
      */
-    public static function createFromJKU(string $jku, bool $allow_unsecured_connection = false, CacheItemPoolInterface $cache = null, int $ttl = 86400, bool $allow_http_connection = false): JWKSetInterface
+    public static function createFromJKU(RequestFactory $requestFactory, HttpClient $client, string $jku, bool $allow_http_connection = false): JWKSetInterface
     {
-        return new JKUJWKSet($jku, $cache, $ttl, $allow_unsecured_connection, $allow_http_connection);
+        return new JKUJWKSet($requestFactory, $client, $jku, $allow_http_connection);
     }
 
     /**
-     * @param string $x5u
-     * @param bool $allow_unsecured_connection
-     * @param CacheItemPoolInterface|null $cache
-     * @param int $ttl
-     * @param bool $allow_http_connection
+     * @param RequestFactory $requestFactory
+     * @param HttpClient     $client
+     * @param string         $x5u
+     * @param bool           $allow_http_connection
+     *
      * @return JWKSetInterface
      */
-    public static function createFromX5U(string $x5u, bool $allow_unsecured_connection = false, CacheItemPoolInterface $cache = null, int $ttl = 86400, bool $allow_http_connection = false): JWKSetInterface
+    public static function createFromX5U(RequestFactory $requestFactory, HttpClient $client, string $x5u, bool $allow_http_connection = false): JWKSetInterface
     {
-        return new X5UJWKSet($x5u, $cache, $ttl, $allow_unsecured_connection, $allow_http_connection);
+        return new X5UJWKSet($requestFactory, $client, $x5u, $allow_http_connection);
     }
 
     /**
