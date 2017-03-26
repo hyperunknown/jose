@@ -20,8 +20,9 @@ use Jose\Signer;
 final class JWSFactory
 {
     /**
-     * @param $payload
-     * @param bool $is_payload_detached
+     * @param mixed $payload
+     * @param bool  $is_payload_detached
+     *
      * @return JWSInterface
      */
     public static function createJWS($payload, bool $is_payload_detached = false): JWSInterface
@@ -29,12 +30,10 @@ final class JWSFactory
         $jws = new JWS();
         $jws = $jws->withPayload($payload);
         if (true === $is_payload_detached) {
-            $jws = $jws->withDetachedPayload();
+            return $jws->withDetachedPayload();
         } else {
-            $jws = $jws->withAttachedPayload();
+            return $jws->withAttachedPayload();
         }
-
-        return $jws;
     }
 
     /**

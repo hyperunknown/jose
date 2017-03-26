@@ -47,6 +47,7 @@ final class JWKFactory
 
     /**
      * @param array $jwksets
+     *
      * @return JWKSetInterface
      */
     public static function createKeySets(array $jwksets = []): JWKSetInterface
@@ -56,7 +57,8 @@ final class JWKFactory
 
     /**
      * @param string $filename
-     * @param array $parameters
+     * @param array  $parameters
+     *
      * @return JWKInterface
      */
     public static function createStorableKey(string $filename, array $parameters): JWKInterface
@@ -66,8 +68,9 @@ final class JWKFactory
 
     /**
      * @param string $filename
-     * @param array $parameters
-     * @param int $nb_keys
+     * @param array  $parameters
+     * @param int    $nb_keys
+     *
      * @return JWKSetInterface
      */
     public static function createRotatableKeySet(string $filename, array $parameters, int $nb_keys): JWKSetInterface
@@ -76,18 +79,20 @@ final class JWKFactory
     }
 
     /**
-     * @param $filename
-     * @param array $parameters
-     * @param int $nb_keys
+     * @param string $filename
+     * @param array  $parameters
+     * @param int    $nb_keys
+     *
      * @return JWKSetInterface
      */
-    public static function createStorableKeySet($filename, array $parameters, int $nb_keys): JWKSetInterface
+    public static function createStorableKeySet(string $filename, array $parameters, int $nb_keys): JWKSetInterface
     {
         return new StorableJWKSet($filename, $parameters, $nb_keys);
     }
 
     /**
      * @param array $config
+     *
      * @return JWKInterface
      */
     public static function createKey(array $config): JWKInterface
@@ -103,6 +108,7 @@ final class JWKFactory
 
     /**
      * @param array $values
+     *
      * @return JWKInterface
      */
     public static function createRSAKey(array $values): JWKInterface
@@ -130,6 +136,7 @@ final class JWKFactory
 
     /**
      * @param array $values
+     *
      * @return JWKInterface
      */
     public static function createECKey(array $values): JWKInterface
@@ -174,6 +181,7 @@ final class JWKFactory
 
     /**
      * @param array $values
+     *
      * @return JWKInterface
      */
     public static function createOctKey(array $values): JWKInterface
@@ -195,6 +203,7 @@ final class JWKFactory
 
     /**
      * @param array $values
+     *
      * @return JWKInterface
      */
     public static function createOKPKey(array $values): JWKInterface
@@ -231,6 +240,7 @@ final class JWKFactory
 
     /**
      * @param array $values
+     *
      * @return JWKInterface
      */
     public static function createNoneKey(array $values): JWKInterface
@@ -315,7 +325,8 @@ final class JWKFactory
 
     /**
      * @param array $values
-     * @return JWK|JWKSet
+     *
+     * @return JWKInterface|JWKSetInterface
      */
     public static function createFromValues(array $values)
     {
@@ -328,7 +339,8 @@ final class JWKFactory
 
     /**
      * @param string $file
-     * @param array $additional_values
+     * @param array  $additional_values
+     *
      * @return JWKInterface
      */
     public static function createFromCertificateFile(string $file, array $additional_values = []): JWKInterface
@@ -353,8 +365,9 @@ final class JWKFactory
     }
 
     /**
-     * @param $res
+     * @param       $res
      * @param array $additional_values
+     *
      * @return JWKInterface
      */
     public static function createFromX509Resource($res, array $additional_values = []): JWKInterface
@@ -367,9 +380,10 @@ final class JWKFactory
     }
 
     /**
-     * @param string $file
+     * @param string      $file
      * @param null|string $password
-     * @param array $additional_values
+     * @param array       $additional_values
+     *
      * @return JWKInterface
      */
     public static function createFromKeyFile(string $file, ?string $password = null, array $additional_values = []): JWKInterface
@@ -381,9 +395,10 @@ final class JWKFactory
     }
 
     /**
-     * @param string $key
+     * @param string      $key
      * @param null|string $password
-     * @param array $additional_values
+     * @param array       $additional_values
+     *
      * @return JWKInterface
      */
     public static function createFromKey(string $key, ?string $password = null, array $additional_values = []): JWKInterface
@@ -423,6 +438,7 @@ final class JWKFactory
     /**
      * @param array $x5c
      * @param array $additional_values
+     *
      * @return JWKInterface
      */
     public static function createFromX5C(array $x5c, array $additional_values = []): JWKInterface
@@ -435,13 +451,12 @@ final class JWKFactory
 
     /**
      * @param JWKSetInterface $jwk_set
-     * @param int $key_index
+     * @param int             $key_index
+     *
      * @return JWKInterface
      */
     public static function createFromKeySet(JWKSetInterface $jwk_set, int $key_index): JWKInterface
     {
-        Assertion::integer($key_index);
-
         return $jwk_set->getKey($key_index);
     }
 }

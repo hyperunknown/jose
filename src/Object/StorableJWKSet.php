@@ -40,9 +40,8 @@ class StorableJWKSet implements StorableInterface, JWKSetInterface
      * @param array  $parameters
      * @param int    $nb_keys
      */
-    public function __construct($filename, array $parameters, $nb_keys)
+    public function __construct(string $filename, array $parameters, int $nb_keys)
     {
-        Assertion::integer($nb_keys, 'The key set must contain at least one key.');
         Assertion::greaterThan($nb_keys, 0, 'The key set must contain at least one key.');
         $this->setFilename($filename);
         $this->parameters = $parameters;

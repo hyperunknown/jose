@@ -19,14 +19,14 @@ final class CompressionManager
     /**
      * @var CompressionInterface[]
      */
-    private $compression_algorithms = [];
+    private $compressionAlgorithms = [];
 
     /**
-     * @param CompressionInterface $compression_algorithm
+     * @param CompressionInterface $compressionAlgorithm
      */
-    public function addCompressionAlgorithm(CompressionInterface $compression_algorithm)
+    public function addCompressionAlgorithm(CompressionInterface $compressionAlgorithm)
     {
-        $this->compression_algorithms[$compression_algorithm->getMethodName()] = $compression_algorithm;
+        $this->compressionAlgorithms[$compressionAlgorithm->getMethodName()] = $compressionAlgorithm;
     }
 
     /**
@@ -36,6 +36,6 @@ final class CompressionManager
      */
     public function getCompressionAlgorithm(string $name): ?CompressionInterface
     {
-        return array_key_exists($name, $this->compression_algorithms) ? $this->compression_algorithms[$name] : null;
+        return array_key_exists($name, $this->compressionAlgorithms) ? $this->compressionAlgorithms[$name] : null;
     }
 }

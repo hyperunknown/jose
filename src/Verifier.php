@@ -57,8 +57,8 @@ final class Verifier
     /**
      * @param JWSInterface $jws
      * @param JWKInterface $jwk
-     * @param null|string $detached_payload
-     * @param int|null    $recipient_index
+     * @param null|string  $detached_payload
+     * @param int|null     $recipient_index
      */
     public function verifyWithKey(JWSInterface $jws, JWKInterface $jwk, ?string $detached_payload = null, ?int &$recipient_index = null)
     {

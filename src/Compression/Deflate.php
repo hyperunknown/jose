@@ -14,7 +14,7 @@ namespace Jose\Compression;
 use Assert\Assertion;
 
 /**
- * This class implements the compression algorithm DEF (defalte)
+ * This class implements the compression algorithm DEF (deflate)
  * This compression algorithm is part of the specification.
  */
 final class Deflate implements CompressionInterface
@@ -22,27 +22,26 @@ final class Deflate implements CompressionInterface
     /**
      * @var int
      */
-    protected $compression_level = -1;
+    protected $compressionLevel = -1;
 
     /**
      * Deflate constructor.
      *
-     * @param int $compression_level
+     * @param int $compressionLevel
      */
-    public function __construct($compression_level = -1)
+    public function __construct(int $compressionLevel = -1)
     {
-        Assertion::integer($compression_level, 'The compression level can be given as 0 for no compression up to 9 for maximum compression. If -1 given, the default compression level will be the default compression level of the zlib library.');
-        Assertion::range($compression_level, -1, 9, 'The compression level can be given as 0 for no compression up to 9 for maximum compression. If -1 given, the default compression level will be the default compression level of the zlib library.');
+        Assertion::range($compressionLevel, -1, 9, 'The compression level can be given as 0 for no compression up to 9 for maximum compression. If -1 given, the default compression level will be the default compression level of the zlib library.');
 
-        $this->compression_level = $compression_level;
+        $this->compressionLevel = $compressionLevel;
     }
 
     /**
      * @return int
      */
-    private function getCompressionLevel()
+    private function getCompressionLevel(): int
     {
-        return $this->compression_level;
+        return $this->compressionLevel;
     }
 
     /**

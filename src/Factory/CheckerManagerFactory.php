@@ -12,6 +12,7 @@
 namespace Jose\Factory;
 
 use Assert\Assertion;
+use Jose\Checker;
 use Jose\Checker\CheckerManager;
 use Jose\Checker\ClaimCheckerInterface;
 use Jose\Checker\HeaderCheckerInterface;
@@ -122,10 +123,10 @@ final class CheckerManagerFactory
     private static function getSupportedClaims(): array
     {
         return [
-            'aud' => '\Jose\Checker\AudienceChecker',
-            'exp' => '\Jose\Checker\ExpirationTimeChecker',
-            'iat' => '\Jose\Checker\IssuedAtChecker',
-            'nbf' => '\Jose\Checker\NotBeforeChecker',
+            'aud' => Checker\AudienceChecker::class,
+            'exp' => Checker\ExpirationTimeChecker::class,
+            'iat' => Checker\IssuedAtChecker::class,
+            'nbf' => Checker\NotBeforeChecker::class,
         ];
     }
 
@@ -135,7 +136,7 @@ final class CheckerManagerFactory
     private static function getSupportedHeaders(): array
     {
         return [
-            'crit' => '\Jose\Checker\CriticalHeaderChecker',
+            'crit' => Checker\CriticalHeaderChecker::class,
         ];
     }
 }

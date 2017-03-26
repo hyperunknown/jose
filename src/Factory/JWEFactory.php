@@ -65,7 +65,7 @@ final class JWEFactory
      *
      * @return string
      */
-    public static function createJWEToFlattenedJSON($payload, JWKInterface $recipient_key, array $shared_protected_headers = [], $shared_headers = [], $recipient_headers = [], ?string $aad = null): string
+    public static function createJWEToFlattenedJSON($payload, JWKInterface $recipient_key, array $shared_protected_headers = [], array $shared_headers = [], array $recipient_headers = [], ?string $aad = null): string
     {
         $jwe = self::createJWEAndEncrypt($payload, $recipient_key, $shared_protected_headers, $shared_headers, $recipient_headers, $aad);
 
@@ -82,7 +82,7 @@ final class JWEFactory
      *
      * @return JWEInterface
      */
-    private static function createJWEAndEncrypt($payload, JWKInterface $recipient_key, array $shared_protected_headers = [], $shared_headers = [], $recipient_headers = [], ?string $aad): JWEInterface
+    private static function createJWEAndEncrypt($payload, JWKInterface $recipient_key, array $shared_protected_headers = [], array $shared_headers = [], array $recipient_headers = [], ?string $aad): JWEInterface
     {
         $complete_headers = array_merge($shared_protected_headers, $shared_headers, $recipient_headers);
         Assertion::keyExists($complete_headers, 'alg', 'No "alg" parameter set in the header');
