@@ -288,7 +288,7 @@ class SignerTest extends TestBase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The algorithm "RS512" is not supported or does not implement SignatureInterface.
+     * @expectedExceptionMessage The algorithm "RS512" is not supported or is not a signature algorithm.
      */
     public function testSignAndLoadWithUnsupportedAlgorithm()
     {

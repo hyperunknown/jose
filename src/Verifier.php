@@ -11,7 +11,6 @@
 
 namespace Jose;
 
-use Assert\Assertion;
 use Base64Url\Base64Url;
 use Jose\Algorithm\JWAManager;
 use Jose\Algorithm\SignatureAlgorithmInterface;
@@ -167,7 +166,9 @@ final class Verifier
      */
     private function checkSignatures(JWSInterface $jws)
     {
-        Assertion::greaterThan($jws->countSignatures(), 0, 'The JWS does not contain any signature.');
+        if (0 === $jws->countSignatures()) {
+            throw new \InvalidArgumentException('The JWS does not contain any signature.');
+        }
     }
 
     /**
@@ -175,7 +176,9 @@ final class Verifier
      */
     private function checkJWKSet(JWKSetInterface $jwk_set)
     {
-        Assertion::greaterThan($jwk_set->countKeys(), 0, 'There is no key in the key set.');
+        if (0 === $jwk_set->countKeys()) {
+            throw new \InvalidArgumentException('There is no key in the key set.');
+        }
     }
 
     /**
@@ -184,14 +187,12 @@ final class Verifier
      */
     private function checkPayload(Object\JWSInterface $jws, ?string $detached_payload = null)
     {
-        Assertion::false(
-            null !== $detached_payload && !empty($jws->getPayload()),
-            'A detached payload is set, but the JWS already has a payload.'
-        );
-        Assertion::true(
-            !empty($jws->getPayload()) || null !== $detached_payload,
-            'No payload.'
-        );
+        if (!empty($jws->getPayload()) && null !== $detached_payload) {
+            throw new \InvalidArgumentException('A detached payload is set, but the JWS already has a payload.');
+        }
+        if (empty($jws->getPayload()) && null === $detached_payload) {
+            throw new \InvalidArgumentException('No payload.');
+        }
     }
 
     /**
@@ -201,14 +202,15 @@ final class Verifier
      */
     private function getAlgorithm(SignatureInterface $signature): SignatureAlgorithmInterface
     {
-        $complete_headers = array_merge(
-            $signature->getProtectedHeaders(),
-            $signature->getHeaders()
-        );
-        Assertion::keyExists($complete_headers, 'alg', 'No "alg" parameter set in the header.');
+        $complete_headers = $signature->getProtectedHeaders() + $signature->getHeaders();
+        if (!array_key_exists('alg', $complete_headers)) {
+            throw new \InvalidArgumentException('No "alg" parameter set in the header.');
+        }
 
         $algorithm = $this->jwaManager->getAlgorithm($complete_headers['alg']);
-        Assertion::isInstanceOf($algorithm, SignatureAlgorithmInterface::class, sprintf('The algorithm "%s" is not supported or does not implement SignatureInterface.', $complete_headers['alg']));
+        if (!$algorithm instanceof SignatureAlgorithmInterface) {
+            throw new \InvalidArgumentException(sprintf('The algorithm "%s" is not supported or is not a signature algorithm.', $complete_headers['alg']));
+        }
 
         return $algorithm;
     }

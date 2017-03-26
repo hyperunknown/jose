@@ -40,8 +40,6 @@ interface JWSInterface extends JWTInterface
     /**
      * Returns the number of signature associated with the JWS.
      *
-     * @internal
-     *
      * @return int
      */
     public function countSignatures();
