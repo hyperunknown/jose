@@ -36,7 +36,7 @@ trait BaseJWKSet
     /**
      * @param int $index
      *
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
     public function getKey($index)
     {
@@ -48,12 +48,12 @@ trait BaseJWKSet
     }
 
     /**
-     * @return \Jose\Object\JWKInterface[]
+     * @return JWKInterface[]
      */
     abstract public function getKeys();
 
     /**
-     * @param \Jose\Object\JWKInterface $key
+     * @param JWKInterface $key
      */
     abstract public function addKey(JWKInterface $key);
 
@@ -81,7 +81,7 @@ trait BaseJWKSet
     }
 
     /**
-     * @return \Jose\Object\JWKInterface|null
+     * @return JWKInterface|null
      */
     public function current()
     {
@@ -135,7 +135,7 @@ trait BaseJWKSet
     /**
      * @param mixed $offset
      *
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
     public function offsetGet($offset)
     {
@@ -164,7 +164,7 @@ trait BaseJWKSet
      * @param null|string $algorithm
      * @param array       $restrictions
      *
-     * @return null|\Jose\Object\JWKInterface
+     * @return null|JWKInterface
      */
     public function selectKey($type, $algorithm = null, array $restrictions = [])
     {
@@ -211,7 +211,7 @@ trait BaseJWKSet
 
     /**
      * @param string                    $type
-     * @param \Jose\Object\JWKInterface $key
+     * @param JWKInterface $key
      *
      * @return bool|int
      */
@@ -229,7 +229,7 @@ trait BaseJWKSet
 
     /**
      * @param null|string               $algorithm
-     * @param \Jose\Object\JWKInterface $key
+     * @param JWKInterface $key
      *
      * @return bool|int
      */
@@ -247,7 +247,7 @@ trait BaseJWKSet
 
     /**
      * @param array                     $restrictions
-     * @param \Jose\Object\JWKInterface $key
+     * @param JWKInterface $key
      *
      * @return bool
      */

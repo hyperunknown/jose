@@ -14,12 +14,12 @@ use Jose\Factory\JWKFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class StorableJWKTest.
+ * final class StorableJWKTest.
  *
  * @group Unit
  * @group StorableJWK
  */
-class StorableJWKTest extends TestCase
+final class StorableJWKTest extends TestCase
 {
     public function testKey()
     {

@@ -20,11 +20,11 @@ use Jose\Object\JWK;
 use Jose\Test\TestBase;
 
 /**
- * Class RSAKeyEncryptionTest.
+ * final class RSAKeyEncryptionTest.
  *
  * @group Unit
  */
-class RSAKeyEncryptionTest extends TestBase
+final class RSAKeyEncryptionTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

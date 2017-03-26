@@ -17,21 +17,20 @@ use Jose\Loader;
 use Jose\Object\JWEInterface;
 use Jose\Object\JWK;
 use Jose\Object\JWKSet;
-use Jose\Test\Stub\FakeLogger;
 use Jose\Test\TestBase;
 
 /**
- * Class EncrypterTest.
+ * final class EncrypterTest.
  *
  * @group Encrypter
  * @group Functional
  */
-class EncrypterTest extends TestBase
+final class EncrypterTest extends TestBase
 {
     public function testEncryptWithJWTInput()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
-        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
+        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE(
             'FOO',
@@ -50,7 +49,7 @@ class EncrypterTest extends TestBase
 
         $encrypted = $jwe->toFlattenedJSON(0);
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($encrypted);
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
@@ -77,7 +76,7 @@ class EncrypterTest extends TestBase
             ]
         );
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($jwe);
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
@@ -86,7 +85,7 @@ class EncrypterTest extends TestBase
         $this->assertEquals('DEF', $loaded->getSharedProtectedHeader('zip'));
         $this->assertNull($loaded->getPayload());
 
-        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
         $decrypter->decryptUsingKeySet($loaded, $this->getPrivateKeySet(), $index);
 
         $this->assertEquals(0, $index);
@@ -112,7 +111,7 @@ class EncrypterTest extends TestBase
             'A,B,C,D'
         );
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($jwe);
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
@@ -124,7 +123,7 @@ class EncrypterTest extends TestBase
         $this->assertEquals('ploc', $loaded->getRecipient(0)->getHeader('plic'));
         $this->assertNull($loaded->getPayload());
 
-        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
         $decrypter->decryptUsingKeySet($loaded, $this->getPrivateKeySet(), $index);
 
         $this->assertEquals(0, $index);
@@ -133,8 +132,8 @@ class EncrypterTest extends TestBase
 
     public function testEncryptAndLoadFlattenedWithAAD()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
-        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
+        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE(
             $this->getKeyToEncrypt(),
@@ -153,7 +152,7 @@ class EncrypterTest extends TestBase
 
         $encrypted = $jwe->toFlattenedJSON(0);
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($encrypted);
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
@@ -175,7 +174,7 @@ class EncrypterTest extends TestBase
      */
     public function testCompressionAlgorithmNotSupported()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE(
             $this->getKeyToEncrypt(),
@@ -195,7 +194,7 @@ class EncrypterTest extends TestBase
 
     public function testMultipleInstructionsNotAllowedWithCompactSerialization()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP', 'RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP', 'RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE('Live long and Prosper.');
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -212,7 +211,7 @@ class EncrypterTest extends TestBase
 
     public function testMultipleInstructionsNotAllowedWithFlattenedSerialization()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256', 'ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256', 'ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE('Live long and Prosper.');
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -239,7 +238,7 @@ class EncrypterTest extends TestBase
      */
     public function testForeignKeyManagementModeForbidden()
     {
-        $encrypter = Encrypter::createEncrypter(['dir', 'ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['dir', 'ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE('Live long and Prosper.');
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -264,7 +263,7 @@ class EncrypterTest extends TestBase
      */
     public function testOperationNotAllowedForTheKey()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE(
             'Foo',
@@ -289,7 +288,7 @@ class EncrypterTest extends TestBase
      */
     public function testAlgorithmNotAllowedForTheKey()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE(
             'FOO',
@@ -310,8 +309,8 @@ class EncrypterTest extends TestBase
 
     public function testEncryptAndLoadFlattenedWithDeflateCompression()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A128CBC-HS256'], ['DEF'], new FakeLogger());
-        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A128CBC-HS256'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], ['A128CBC-HS256'], ['DEF']);
+        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256'], ['A128CBC-HS256'], ['DEF']);
 
         $jwe = JWEFactory::createJWE($this->getKeySetToEncrypt());
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -328,7 +327,7 @@ class EncrypterTest extends TestBase
 
         $encrypted = $jwe->toCompactJSON(0);
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($encrypted);
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
@@ -350,7 +349,7 @@ class EncrypterTest extends TestBase
      */
     public function testAlgParameterIsMissing()
     {
-        $encrypter = Encrypter::createEncrypter(['A256CBC-HS512'], [], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['A256CBC-HS512'], [], ['DEF']);
 
         $jwe = JWEFactory::createJWE($this->getKeyToEncrypt());
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -371,7 +370,7 @@ class EncrypterTest extends TestBase
      */
     public function testEncParameterIsMissing()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], [], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], [], ['DEF']);
 
         $jwe = JWEFactory::createJWE($this->getKeyToEncrypt());
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -392,7 +391,7 @@ class EncrypterTest extends TestBase
      */
     public function testNotAKeyEncryptionAlgorithm()
     {
-        $encrypter = Encrypter::createEncrypter(['A256CBC-HS512'], [], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['A256CBC-HS512'], [], ['DEF']);
 
         $jwe = JWEFactory::createJWE($this->getKeyToEncrypt());
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -414,7 +413,7 @@ class EncrypterTest extends TestBase
      */
     public function testNotAContentEncryptionAlgorithm()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], [], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256'], [], ['DEF']);
 
         $jwe = JWEFactory::createJWE($this->getKeyToEncrypt());
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -433,8 +432,8 @@ class EncrypterTest extends TestBase
 
     public function testEncryptAndLoadCompactWithDirectKeyEncryption()
     {
-        $encrypter = Encrypter::createEncrypter(['dir'], ['A192CBC-HS384'], ['DEF'], new FakeLogger());
-        $decrypter = Decrypter::createDecrypter(['dir'], ['A192CBC-HS384'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['dir'], ['A192CBC-HS384'], ['DEF']);
+        $decrypter = Decrypter::createDecrypter(['dir'], ['A192CBC-HS384'], ['DEF']);
 
         $jwe = JWEFactory::createJWE($this->getKeyToEncrypt());
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -450,7 +449,7 @@ class EncrypterTest extends TestBase
 
         $encrypted = $jwe->toFlattenedJSON(0);
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($encrypted);
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
@@ -468,8 +467,8 @@ class EncrypterTest extends TestBase
 
     public function testEncryptAndLoadCompactKeyAgreement()
     {
-        $encrypter = Encrypter::createEncrypter(['ECDH-ES'], ['A192CBC-HS384'], ['DEF'], new FakeLogger());
-        $decrypter = Decrypter::createDecrypter(['ECDH-ES'], ['A192CBC-HS384'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['ECDH-ES'], ['A192CBC-HS384'], ['DEF']);
+        $decrypter = Decrypter::createDecrypter(['ECDH-ES'], ['A192CBC-HS384'], ['DEF']);
 
         $jwe = JWEFactory::createJWE(['user_id' => '1234', 'exp' => time() + 3600]);
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -484,7 +483,7 @@ class EncrypterTest extends TestBase
 
         $encrypter->encrypt($jwe);
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($jwe->toFlattenedJSON(0));
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
@@ -503,8 +502,8 @@ class EncrypterTest extends TestBase
 
     public function testEncryptAndLoadCompactKeyAgreementWithWrappingCompact()
     {
-        $encrypter = Encrypter::createEncrypter(['ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
-        $decrypter = Decrypter::createDecrypter(['ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF']);
+        $decrypter = Decrypter::createDecrypter(['ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE('Live long and Prosper.');
         $jwe = $jwe->withSharedProtectedHeaders([
@@ -519,7 +518,7 @@ class EncrypterTest extends TestBase
 
         $encrypter->encrypt($jwe);
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($jwe->toFlattenedJSON(0));
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
@@ -538,7 +537,7 @@ class EncrypterTest extends TestBase
 
     public function testEncryptAndLoadWithGCMAndAAD()
     {
-        $encrypter = Encrypter::createEncrypter(['ECDH-ES+A256KW'], ['A256GCM'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['ECDH-ES+A256KW'], ['A256GCM'], ['DEF']);
 
         $jwe = JWEFactory::createJWE(
             'Live long and Prosper.',
@@ -557,10 +556,10 @@ class EncrypterTest extends TestBase
 
         $encrypter->encrypt($jwe);
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($jwe->toFlattenedJSON(0));
 
-        $decrypter = Decrypter::createDecrypter(['A256GCM'], ['ECDH-ES+A256KW'], ['DEF'], new FakeLogger());
+        $decrypter = Decrypter::createDecrypter(['A256GCM'], ['ECDH-ES+A256KW'], ['DEF']);
 
         $this->assertInstanceOf(JWEInterface::class, $loaded);
         $this->assertEquals('ECDH-ES+A256KW', $loaded->getSharedProtectedHeader('alg'));
@@ -578,8 +577,8 @@ class EncrypterTest extends TestBase
 
     public function testEncryptAndLoadCompactKeyAgreementWithWrapping()
     {
-        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256', 'ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
-        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256', 'ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF'], new FakeLogger());
+        $encrypter = Encrypter::createEncrypter(['RSA-OAEP-256', 'ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF']);
+        $decrypter = Decrypter::createDecrypter(['RSA-OAEP-256', 'ECDH-ES+A256KW'], ['A256CBC-HS512'], ['DEF']);
 
         $jwe = JWEFactory::createJWE('Live long and Prosper.');
         $jwe = $jwe->withSharedProtectedHeaders(['enc' => 'A256CBC-HS512']);
@@ -595,7 +594,7 @@ class EncrypterTest extends TestBase
 
         $encrypter->encrypt($jwe);
 
-        $loader = new Loader(new FakeLogger());
+        $loader = new Loader();
         $loaded = $loader->load($jwe->toJSON());
 
         $this->assertEquals(2, $loaded->countRecipients());

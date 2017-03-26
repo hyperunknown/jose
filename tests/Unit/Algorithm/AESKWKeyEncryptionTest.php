@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  * @group AESKW
  * @group Unit
  */
-class AESKWKeyEncryptionTest extends TestCase
+final class AESKWKeyEncryptionTest extends TestCase
 {
     public function testA128KW()
     {

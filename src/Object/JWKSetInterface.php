@@ -16,7 +16,7 @@ interface JWKSetInterface extends \Countable, \Iterator, \JsonSerializable, \Arr
     /**
      * @param $index
      *
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
     public function getKey($index);
 
@@ -30,14 +30,14 @@ interface JWKSetInterface extends \Countable, \Iterator, \JsonSerializable, \Arr
     /**
      * Returns all keys in the key set.
      *
-     * @return \Jose\Object\JWKInterface[] An array of keys stored in the key set
+     * @return JWKInterface[] An array of keys stored in the key set
      */
     public function getKeys();
 
     /**
      * Add key in the key set.
      *
-     * @param \Jose\Object\JWKInterface A key to store in the key set
+     * @param JWKInterface A key to store in the key set
      */
     public function addKey(JWKInterface $key);
 
@@ -58,7 +58,7 @@ interface JWKSetInterface extends \Countable, \Iterator, \JsonSerializable, \Arr
      * @param string|null $algorithm    Specifies the algorithm to be used
      * @param array       $restrictions More restrictions such as 'kid' or 'kty'
      *
-     * @return \Jose\Object\JWKInterface|null
+     * @return JWKInterface|null
      */
     public function selectKey($type, $algorithm = null, array $restrictions = []);
 

@@ -12,12 +12,12 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class JWETest.
+ * final class JWETest.
  *
  * @group JWTCreator
  * @group Unit
  */
-class JWTCreatorTest extends TestCase
+final class JWTCreatorTest extends TestCase
 {
     public function testMethods()
     {

@@ -17,7 +17,7 @@ use Jose\Test\TestBase;
  * @group ECKeys
  * @group Unit
  */
-class ECKeysTest extends TestBase
+final class ECKeysTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

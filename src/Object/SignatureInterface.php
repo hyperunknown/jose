@@ -23,21 +23,21 @@ interface SignatureInterface
      * @param string|null $encoded_protected_headers
      * @param array       $headers
      *
-     * @return \Jose\Object\Signature
+     * @return Signature
      */
     public static function createSignatureFromLoadedData($signature, $encoded_protected_headers, array $headers);
 
     /**
-     * @param \Jose\Object\JWKInterface $signature_key
+     * @param JWKInterface $signature_key
      * @param array                     $protected_headers
      * @param array                     $headers
      *
-     * @return \Jose\Object\Signature
+     * @return Signature
      */
     public static function createSignature(JWKInterface $signature_key, array $protected_headers, array $headers);
 
     /**
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
     public function getSignatureKey();
 

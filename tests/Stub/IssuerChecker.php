@@ -13,7 +13,7 @@ namespace Jose\Test\Stub;
 
 use Jose\Checker\IssuerChecker as Base;
 
-class IssuerChecker extends Base
+final class IssuerChecker extends Base
 {
     /**
      * {@inheritdoc}

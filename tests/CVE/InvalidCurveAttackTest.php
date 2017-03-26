@@ -17,7 +17,7 @@ use Jose\Test\TestBase;
  * @group CVE
  * @group Functional
  */
-class InvalidCurveAttackTest extends TestBase
+final class InvalidCurveAttackTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

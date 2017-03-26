@@ -15,12 +15,12 @@ use Jose\Object\JWKSetInterface;
 use Jose\Test\TestBase;
 
 /**
- * Class JWKTest.
+ * final class JWKTest.
  *
  * @group Unit
  * @group JWKSet
  */
-class JWKSetTest extends TestBase
+final class JWKSetTest extends TestBase
 {
     public function testKeySelection()
     {

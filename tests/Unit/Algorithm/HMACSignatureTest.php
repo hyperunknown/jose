@@ -16,12 +16,12 @@ use Jose\Object\JWK;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class HMACSignatureTest.
+ * final class HMACSignatureTest.
  *
  * @group HMAC
  * @group Unit
  */
-class HMACSignatureTest extends TestCase
+final class HMACSignatureTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException

@@ -20,14 +20,14 @@ final class PublicJWKSet implements JWKSetInterface
     use JWKSetPEM;
 
     /**
-     * @var \Jose\Object\JWKSetInterface
+     * @var JWKSetInterface
      */
     private $jwkset;
 
     /**
      * PublicJWKSet constructor.
      *
-     * @param \Jose\Object\JWKSetInterface $jwkset
+     * @param JWKSetInterface $jwkset
      */
     public function __construct(JWKSetInterface $jwkset)
     {

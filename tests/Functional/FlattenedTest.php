@@ -16,11 +16,11 @@ use Jose\Object\JWSInterface;
 use Jose\Test\TestBase;
 
 /**
- * Class FlattenedTest.
+ * final class FlattenedTest.
  *
  * @group Functional
  */
-class FlattenedTest extends TestBase
+final class FlattenedTest extends TestBase
 {
     /**
      * @see https://tools.ietf.org/html/rfc7516#appendix-A.5

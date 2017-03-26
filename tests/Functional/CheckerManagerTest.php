@@ -17,7 +17,7 @@ use Jose\Test\TestBase;
  * @group CheckerManager
  * @group Functional
  */
-class CheckerManagerTest extends TestBase
+final class CheckerManagerTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

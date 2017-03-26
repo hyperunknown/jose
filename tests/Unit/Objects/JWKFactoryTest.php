@@ -18,12 +18,12 @@ use Http\Client\Curl\Client;
 use Http\Message\StreamFactory\DiactorosStreamFactory;
 
 /**
- * Class JWKFactoryTest.
+ * final class JWKFactoryTest.
  *
  * @group JWKFactory
  * @group Unit
  */
-class JWKFactoryTest extends TestCase
+final class JWKFactoryTest extends TestCase
 {
     public function testCreateFromECCertificateFileInDERFormat()
     {

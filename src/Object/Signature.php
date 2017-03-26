@@ -40,7 +40,7 @@ final class Signature implements SignatureInterface
     private $signature;
 
     /**
-     * @var \Jose\Object\JWKInterface
+     * @var JWKInterface
      */
     private $signature_key;
 
@@ -157,7 +157,7 @@ final class Signature implements SignatureInterface
     }
 
     /**
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
     public function getSignatureKey()
     {

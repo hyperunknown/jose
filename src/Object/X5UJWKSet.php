@@ -20,7 +20,7 @@ use Jose\KeyConverter\KeyConverter;
 final class X5UJWKSet extends DownloadedJWKSet
 {
     /**
-     * @return \Jose\Object\JWKInterface[]
+     * @return JWKInterface[]
      */
     public function getKeys()
     {

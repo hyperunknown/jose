@@ -17,12 +17,12 @@ use Jose\Signer;
 use Jose\Test\TestBase;
 
 /**
- * Class NoneSignatureTest.
+ * final class NoneSignatureTest.
  *
  * @group None
  * @group Unit
  */
-class NoneSignatureTest extends TestBase
+final class NoneSignatureTest extends TestBase
 {
     public function testNoneSignAndVerifyAlgorithm()
     {

@@ -17,11 +17,11 @@ use Jose\Compression\ZLib;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class CompressionTest.
+ * final class CompressionTest.
  *
  * @group Unit
  */
-class CompressionTest extends TestCase
+final class CompressionTest extends TestCase
 {
     public function testGetValidCompressionAlgorithm()
     {

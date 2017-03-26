@@ -19,12 +19,12 @@ use Jose\Object\JWK;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ECDHESKeyAgreementTest.
+ * final class ECDHESKeyAgreementTest.
  *
  * @group ECDHES
  * @group Unit
  */
-class ECDHESKeyAgreementTest extends TestCase
+final class ECDHESKeyAgreementTest extends TestCase
 {
     /**
      * @see https://tools.ietf.org/html/rfc7518#appendix-C

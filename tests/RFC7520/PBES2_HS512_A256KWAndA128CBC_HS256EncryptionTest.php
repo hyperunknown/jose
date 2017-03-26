@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @group RFC7520
  */
-class PBES2_HS512_A256KWAndA128CBC_HS256EncryptionTest extends TestCase
+final class PBES2_HS512_A256KWAndA128CBC_HS256EncryptionTest extends TestCase
 {
     /**
      * Please note that we cannot the encryption and get the same result as the example (IV, TAG and other data are always different).

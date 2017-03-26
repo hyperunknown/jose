@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @group RFC7520
  */
-class MultipleRecipientEncryptionTest extends TestCase
+final class MultipleRecipientEncryptionTest extends TestCase
 {
     /**
      * Please note that we cannot the encryption and get the same result as the example (IV, TAG and other data are always different).

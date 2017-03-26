@@ -16,7 +16,7 @@ use Jose\Test\TestBase;
  * @group OKPKeys
  * @group Unit
  */
-class OKPKeysTest extends TestBase
+final class OKPKeysTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

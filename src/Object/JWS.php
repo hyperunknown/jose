@@ -32,7 +32,7 @@ final class JWS implements JWSInterface
     private $encoded_payload = null;
 
     /**
-     * @var \Jose\Object\SignatureInterface[]
+     * @var SignatureInterface[]
      */
     private $signatures = [];
 
@@ -225,7 +225,7 @@ final class JWS implements JWSInterface
     }
 
     /**
-     * @param \Jose\Object\SignatureInterface $signature
+     * @param SignatureInterface $signature
      *
      * @return bool
      */

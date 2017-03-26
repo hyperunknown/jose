@@ -24,7 +24,7 @@ use Jose\Verifier;
  * @group JWTCreator
  * @group Functional
  */
-class LoaderAndCreatorTest extends TestBase
+final class LoaderAndCreatorTest extends TestBase
 {
     public function testSignAndLoadUsingJWTCreatorAndJWTLoader()
     {

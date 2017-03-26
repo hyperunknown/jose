@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  * @group ForeignJWT
  * @group Functional
  */
-class ForeignJWTTest extends TestCase
+final class ForeignJWTTest extends TestCase
 {
     /*
      * The following test uses an assertion created with another library.

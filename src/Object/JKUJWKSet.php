@@ -19,7 +19,7 @@ use Assert\Assertion;
 final class JKUJWKSet extends DownloadedJWKSet
 {
     /**
-     * @return \Jose\Object\JWKInterface[]
+     * @return JWKInterface[]
      */
     public function getKeys()
     {

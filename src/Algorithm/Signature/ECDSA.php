@@ -36,7 +36,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $key
+     * @param JWKInterface $key
      * @param string                    $data
      *
      * @return string
@@ -79,7 +79,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $key
+     * @param JWKInterface $key
      * @param string                    $data
      * @param string                    $R
      * @param string                    $S

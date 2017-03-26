@@ -20,7 +20,7 @@ use Jose\KeyConverter\RSAKey;
 trait JWKSetPEM
 {
     /**
-     * @return \Jose\Object\JWKInterface[]
+     * @return JWKInterface[]
      */
     abstract public function getKeys();
 
@@ -49,7 +49,7 @@ trait JWKSetPEM
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $key
+     * @param JWKInterface $key
      *
      * @return string
      */

@@ -15,12 +15,12 @@ use Jose\Object\JWKSet;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class JWKTest.
+ * final class JWKTest.
  *
  * @group Unit
  * @group JWK
  */
-class JWKTest extends TestCase
+final class JWKTest extends TestCase
 {
     public function testKey()
     {

@@ -83,7 +83,7 @@ final class JWK implements JWKInterface
     }
 
     /**
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
     public function toPublic()
     {

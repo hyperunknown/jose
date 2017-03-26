@@ -193,7 +193,7 @@ class StorableJWKSet implements StorableInterface, JWKSetInterface
     }
 
     /**
-     * @return \Jose\Object\JWKSetInterface
+     * @return JWKSetInterface
      */
     protected function getJWKSet()
     {
@@ -227,7 +227,7 @@ class StorableJWKSet implements StorableInterface, JWKSetInterface
     }
 
     /**
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
     protected function createJWK()
     {

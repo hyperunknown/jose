@@ -65,7 +65,7 @@ final class RSAKey extends Sequence
     private $coefficient = null;
 
     /**
-     * @param \Jose\Object\JWKInterface|string|array $data
+     * @param JWKInterface|string|array $data
      */
     public function __construct($data)
     {

@@ -18,12 +18,12 @@ use Jose\Object\JWSInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RSAKeyWithoutAllPrimesTest.
+ * final class RSAKeyWithoutAllPrimesTest.
  *
  * @group RSA2
  * @group Unit
  */
-class RSAKeyWithoutAllPrimesTest extends TestCase
+final class RSAKeyWithoutAllPrimesTest extends TestCase
 {
     /**
      * @param string $signature_algorithm

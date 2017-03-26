@@ -66,8 +66,8 @@ final class ECDHES implements KeyAgreementInterface
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $private_key
-     * @param \Jose\Object\JWKInterface $public_key
+     * @param JWKInterface $private_key
+     * @param JWKInterface $public_key
      *
      * @throws \InvalidArgumentException
      *

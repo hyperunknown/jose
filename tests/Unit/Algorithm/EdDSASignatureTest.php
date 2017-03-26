@@ -19,12 +19,12 @@ use Jose\Test\TestBase;
 use Jose\Verifier;
 
 /**
- * Class EdDSASignatureTest.
+ * final class EdDSASignatureTest.
  *
  * @group EdDSA
  * @group Unit
  */
-class EdDSASignatureTest extends TestBase
+final class EdDSASignatureTest extends TestBase
 {
     /**
      * @see https://tools.ietf.org/html/draft-ietf-jose-cfrg-curves-00#appendix-A.5

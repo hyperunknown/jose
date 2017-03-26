@@ -16,12 +16,12 @@ use Jose\Object\Signature;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class JWSTest.
+ * final class JWSTest.
  *
  * @group JWS
  * @group Unit
  */
-class JWSTest extends TestCase
+final class JWSTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException

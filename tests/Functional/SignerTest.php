@@ -22,7 +22,7 @@ use Jose\Verifier;
  * @group Signer
  * @group Functional
  */
-class SignerTest extends TestBase
+final class SignerTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

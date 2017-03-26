@@ -19,7 +19,7 @@ interface KeyEncryptionInterface extends KeyEncryptionAlgorithmInterface
     /**
      * Encrypt the CEK.
      *
-     * @param \Jose\Object\JWKInterface $key                The key used to wrap the CEK
+     * @param JWKInterface $key                The key used to wrap the CEK
      * @param string                    $cek                The CEK to encrypt
      * @param array                     $complete_headers   The complete header of the JWT
      * @param array                     $additional_headers Additional headers
@@ -33,7 +33,7 @@ interface KeyEncryptionInterface extends KeyEncryptionAlgorithmInterface
     /**
      * Decrypt de CEK.
      *
-     * @param \Jose\Object\JWKInterface $key           The key used to wrap the CEK
+     * @param JWKInterface $key           The key used to wrap the CEK
      * @param string                    $encrypted_cek The CEK to decrypt
      * @param array                     $header        The complete header of the JWT
      *

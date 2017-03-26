@@ -14,12 +14,12 @@ use Jose\Factory\AlgorithmManagerFactory;
 use Jose\Test\TestBase;
 
 /**
- * Class JWAManagerTest.
+ * final class JWAManagerTest.
  *
  * @group JWA
  * @group Unit
  */
-class JWAManagerTest extends TestBase
+final class JWAManagerTest extends TestBase
 {
     public function testAlgorithmIsSupported()
     {

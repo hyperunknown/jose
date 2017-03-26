@@ -16,11 +16,11 @@ use Jose\Algorithm\ContentEncryption\A256GCM;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class AESGCMContentEncryptionTest.
+ * final class AESGCMContentEncryptionTest.
  *
  * @group Unit
  */
-class AESGCMContentEncryptionTest extends TestCase
+final class AESGCMContentEncryptionTest extends TestCase
 {
     public function testA128GCMEncryptAndDecrypt()
     {

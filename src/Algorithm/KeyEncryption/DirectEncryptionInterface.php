@@ -17,7 +17,7 @@ use Jose\Object\JWKInterface;
 interface DirectEncryptionInterface extends KeyEncryptionAlgorithmInterface
 {
     /**
-     * @param \Jose\Object\JWKInterface $key The key used to get the CEK
+     * @param JWKInterface $key The key used to get the CEK
      *
      * @throws \Exception If key does not support the algorithm or if the key usage does not authorize the operation
      *

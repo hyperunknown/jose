@@ -15,11 +15,11 @@ use Jose\Object\JWK;
 use Jose\Test\TestBase;
 
 /**
- * Class DirAlgorithmTest.
+ * final class DirAlgorithmTest.
  *
  * @group Unit
  */
-class DirAlgorithmTest extends TestBase
+final class DirAlgorithmTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

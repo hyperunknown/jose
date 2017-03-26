@@ -28,12 +28,12 @@ use Jose\Test\TestBase;
 use Jose\Verifier;
 
 /**
- * Class RSASignatureTest.
+ * final class RSASignatureTest.
  *
  * @group RSA
  * @group Unit
  */
-class RSASignatureTest extends TestBase
+final class RSASignatureTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException

@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @group RFC7520
  */
-class A128KWAndA128GCMEncryptionWithCompressionTest extends TestCase
+final class A128KWAndA128GCMEncryptionWithCompressionTest extends TestCase
 {
     /**
      * Please note that we cannot the encryption and get the same result as the example (IV, TAG and other data are always different).

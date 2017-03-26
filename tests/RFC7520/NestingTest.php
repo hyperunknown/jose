@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @group RFC7520
  */
-class NestingTest extends TestCase
+final class NestingTest extends TestCase
 {
     public function testSignatureVerification()
     {

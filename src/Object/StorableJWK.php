@@ -87,7 +87,7 @@ class StorableJWK implements StorableInterface, JWKInterface
     }
 
     /**
-     * @return \Jose\Object\JWKInterface
+     * @return JWKInterface
      */
     protected function getJWK()
     {

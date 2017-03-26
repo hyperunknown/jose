@@ -16,12 +16,12 @@ use Jose\Algorithm\ContentEncryption\A256CBCHS512;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class AESCBC_HSContentEncryptionTest.
+ * final class AESCBC_HSContentEncryptionTest.
  *
  * @group AESCBC
  * @group Unit
  */
-class AESCBC_HSContentEncryptionTest extends TestCase
+final class AESCBC_HSContentEncryptionTest extends TestCase
 {
     /**
      * @see https://tools.ietf.org/html/rfc7516#appendix-B

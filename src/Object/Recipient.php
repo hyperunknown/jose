@@ -27,7 +27,7 @@ final class Recipient implements RecipientInterface
     private $encrypted_key = null;
 
     /**
-     * @var \Jose\Object\JWKInterface
+     * @var JWKInterface
      */
     private $recipient_key = null;
 
