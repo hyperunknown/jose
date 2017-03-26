@@ -11,8 +11,6 @@
 
 namespace Jose;
 
-use Assert\Assertion;
-
 final class JWTCreator
 {
     /**
@@ -61,7 +59,9 @@ final class JWTCreator
      */
     public function encrypt($payload, array $encryption_protected_headers, Object\JWKInterface $encryption_key): string
     {
-        Assertion::true($this->isEncryptionSupportEnabled(), 'The encryption support is not enabled');
+        if (false === $this->isEncryptionSupportEnabled()) {
+            throw new \InvalidArgumentException('The encryption support is not enabled');
+        }
 
         $jwe = Factory\JWEFactory::createJWE($payload, $encryption_protected_headers);
         $jwe = $jwe->addRecipientInformation($encryption_key);

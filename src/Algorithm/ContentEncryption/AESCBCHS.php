@@ -11,7 +11,6 @@
 
 namespace Jose\Algorithm\ContentEncryption;
 
-use Assert\Assertion;
 use Jose\Algorithm\ContentEncryptionAlgorithmInterface;
 
 abstract class AESCBCHS implements ContentEncryptionAlgorithmInterface
@@ -35,10 +34,9 @@ abstract class AESCBCHS implements ContentEncryptionAlgorithmInterface
      */
     public function decryptContent(string $data, string $cek, string $iv, ?string $aad, string $encoded_protected_header, string $tag): string
     {
-        Assertion::true(
-            $this->isTagValid($data, $cek, $iv, $aad, $encoded_protected_header, $tag),
-            'Unable to verify the tag.'
-        );
+        if (false === $this->isTagValid($data, $cek, $iv, $aad, $encoded_protected_header, $tag)) {
+            throw new \InvalidArgumentException('Unable to verify the tag.');
+        }
 
         $k = mb_substr($cek, mb_strlen($cek, '8bit') / 2, null, '8bit');
 

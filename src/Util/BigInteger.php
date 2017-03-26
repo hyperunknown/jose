@@ -11,8 +11,6 @@
 
 namespace Jose\Util;
 
-use Assert\Assertion;
-
 final class BigInteger
 {
     /**
@@ -207,7 +205,9 @@ final class BigInteger
     public function modInverse(BigInteger $n): BigInteger
     {
         $value = gmp_invert($this->value, $n->value);
-        Assertion::isInstanceOf($value, \GMP::class);
+        if (!$value instanceof \GMP) {
+            throw new \InvalidArgumentException();
+        }
 
         return self::createFromGMPResource($value);
     }
