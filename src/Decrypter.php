@@ -11,7 +11,6 @@
 
 namespace Jose;
 
-use Assert\Assertion;
 use Base64Url\Base64Url;
 use Jose\Algorithm\ContentEncryptionAlgorithmInterface;
 use Jose\Algorithm\JWAInterface;
@@ -156,7 +155,9 @@ final class Decrypter
      */
     private function checkRecipients(JWEInterface $jwe)
     {
-        Assertion::greaterThan($jwe->countRecipients(), 0, 'The JWE does not contain any recipient.');
+        if (0 === $jwe->countRecipients()) {
+            throw new \InvalidArgumentException('The JWE does not contain any recipient.');
+        }
     }
 
     /**
@@ -164,7 +165,9 @@ final class Decrypter
      */
     private function checkPayload(JWEInterface $jwe)
     {
-        Assertion::true(null === $jwe->getPayload(), 'The JWE is already decrypted.');
+        if (null !== $jwe->getPayload()) {
+            throw new \LogicException('The JWE is already decrypted.');
+        }
     }
 
     /**
@@ -172,7 +175,9 @@ final class Decrypter
      */
     private function checkJWKSet(JWKSetInterface $jwk_set)
     {
-        Assertion::greaterThan(count($jwk_set), 0, 'No key in the key set.');
+        if(0 === $jwk_set->countKeys()) {
+            throw new \InvalidArgumentException('No key in the key set.');
+        }
     }
 
     /**
@@ -232,7 +237,9 @@ final class Decrypter
         if (array_key_exists('zip', $complete_headers)) {
             $compression_method = $this->getCompressionMethod($complete_headers['zip']);
             $payload = $compression_method->uncompress($payload);
-            Assertion::string($payload, 'Decompression failed');
+            if(!is_string($payload)) {
+                throw new \InvalidArgumentException('Decompression failed');
+            }
         }
     }
 
@@ -244,7 +251,9 @@ final class Decrypter
     private function checkCompleteHeader(array $complete_headers)
     {
         foreach (['enc', 'alg'] as $key) {
-            Assertion::keyExists($complete_headers, $key, sprintf("Parameters '%s' is missing.", $key));
+            if (!array_key_exists($key, $complete_headers)) {
+                throw new \InvalidArgumentException(sprintf("Parameters '%s' is missing.", $key));
+            }
         }
     }
 
@@ -256,7 +265,9 @@ final class Decrypter
     private function getKeyEncryptionAlgorithm(array $complete_headers): KeyEncryptionAlgorithmInterface
     {
         $key_encryption_algorithm = $this->getJWAManager()->getAlgorithm($complete_headers['alg']);
-        Assertion::isInstanceOf($key_encryption_algorithm, KeyEncryptionAlgorithmInterface::class, sprintf('The key encryption algorithm "%s" is not supported or does not implement KeyEncryptionAlgorithmInterface.', $complete_headers['alg']));
+        if (!$key_encryption_algorithm instanceof KeyEncryptionAlgorithmInterface) {
+            throw new \InvalidArgumentException(sprintf('The key encryption algorithm "%s" is not supported or is not a key encryption algorithm.', $complete_headers['alg']));
+        }
 
         return $key_encryption_algorithm;
     }
@@ -269,7 +280,9 @@ final class Decrypter
     private function getContentEncryptionAlgorithm(array $complete_headers): ContentEncryptionAlgorithmInterface
     {
         $content_encryption_algorithm = $this->getJWAManager()->getAlgorithm($complete_headers['enc']);
-        Assertion::isInstanceOf($content_encryption_algorithm, ContentEncryptionAlgorithmInterface::class, sprintf('The key encryption algorithm "%s" is not supported or does not implement ContentEncryptionInterface.', $complete_headers['enc']));
+        if (!$content_encryption_algorithm instanceof ContentEncryptionAlgorithmInterface) {
+            throw new \InvalidArgumentException(sprintf('The content encryption algorithm "%s" is not supported or is not a content encryption algorithm.', $complete_headers['enc']));
+        }
 
         return $content_encryption_algorithm;
     }
@@ -284,7 +297,9 @@ final class Decrypter
     private function getCompressionMethod(string $method): CompressionInterface
     {
         $compression_method = $this->compressionManager->getCompressionAlgorithm($method);
-        Assertion::notNull($compression_method, sprintf('Compression method "%s" not supported', $method));
+        if (null === $compression_method) {
+            throw new \RuntimeException(sprintf('Compression method "%s" not supported', $method));
+        }
 
         return $compression_method;
     }
