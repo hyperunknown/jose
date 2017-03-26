@@ -11,7 +11,6 @@
 
 namespace Jose;
 
-use Assert\Assertion;
 use Base64Url\Base64Url;
 use Jose\Algorithm\ContentEncryptionAlgorithmInterface;
 use Jose\Algorithm\JWAManager;
@@ -76,8 +75,12 @@ final class Encrypter
      */
     public function encrypt(JWEInterface &$jwe)
     {
-        Assertion::false($jwe->isEncrypted(), 'The JWE is already encrypted.');
-        Assertion::greaterThan($jwe->countRecipients(), 0, 'The JWE does not contain recipient.');
+        if (true === $jwe->isEncrypted()) {
+            throw new \LogicException('The JWE is already encrypted.');
+        }
+        if (0 === $jwe->countRecipients()) {
+            throw new \InvalidArgumentException('The JWE does not contain recipient.');
+        }
         $additional_headers = [];
         $nb_recipients = $jwe->countRecipients();
         $content_encryption_algorithm = $this->getContentEncryptionAlgorithm($jwe);
@@ -158,13 +161,17 @@ final class Encrypter
     private function preparePayload($payload, Compression\CompressionInterface $compression_method = null): string
     {
         $prepared = is_string($payload) ? $payload : json_encode($payload);
-        Assertion::notNull($prepared, 'The payload is empty or cannot encoded into JSON.');
+        if (!is_string($prepared)) {
+            throw new \InvalidArgumentException('The payload is empty or cannot encoded into JSON.');
+        }
 
         if (null === $compression_method) {
             return $prepared;
         }
         $compressed_payload = $compression_method->compress($prepared);
-        Assertion::string($compressed_payload, 'Compression failed.');
+        if (!is_string($compressed_payload)) {
+            throw new \InvalidArgumentException('Compression failed.');
+        }
 
         return $compressed_payload;
     }
