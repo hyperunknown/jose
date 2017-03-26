@@ -22,7 +22,7 @@ final class JWE implements JWEInterface
     use JWT;
 
     /**
-     * @var \Jose\Object\RecipientInterface[]
+     * @var RecipientInterface[]
      */
     private $recipients = [];
 
@@ -64,7 +64,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function countRecipients()
+    public function countRecipients(): int
     {
         return count($this->recipients);
     }
@@ -72,7 +72,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function isEncrypted()
+    public function isEncrypted(): bool
     {
         return null !== $this->getCiphertext();
     }
@@ -80,7 +80,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function addRecipientInformation(JWKInterface $recipient_key, $recipient_headers = [])
+    public function addRecipientInformation(JWKInterface $recipient_key, array $recipient_headers = []): JWEInterface
     {
         Assertion::true(null === $this->getCiphertext(), 'The JWE is encrypted. No additional recipient allowed.');
         $jwe = clone $this;
@@ -92,7 +92,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function addRecipientWithEncryptedKey($encrypted_key, array $recipient_headers)
+    public function addRecipientWithEncryptedKey(?string $encrypted_key, array $recipient_headers): JWEInterface
     {
         $jwe = clone $this;
         $jwe->recipients[] = Recipient::createRecipientFromLoadedJWE($recipient_headers, $encrypted_key);
@@ -103,7 +103,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getRecipients()
+    public function getRecipients(): array
     {
         return $this->recipients;
     }
@@ -111,7 +111,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function &getRecipient($id)
+    public function &getRecipient(int $id): RecipientInterface
     {
         Assertion::keyExists($this->recipients, $id, 'The recipient does not exist.');
 
@@ -121,7 +121,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getCiphertext()
+    public function getCiphertext(): ?string
     {
         return $this->ciphertext;
     }
@@ -129,7 +129,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withCiphertext($ciphertext)
+    public function withCiphertext(string $ciphertext): JWEInterface
     {
         $jwe = clone $this;
         $jwe->ciphertext = $ciphertext;
@@ -140,7 +140,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getAAD()
+    public function getAAD(): ?string
     {
         return $this->aad;
     }
@@ -148,7 +148,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withAAD($aad)
+    public function withAAD(string $aad): JWEInterface
     {
         $jwe = clone $this;
         $jwe->aad = $aad;
@@ -159,7 +159,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getIV()
+    public function getIV(): ?string
     {
         return $this->iv;
     }
@@ -167,7 +167,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withIV($iv)
+    public function withIV(string $iv): JWEInterface
     {
         $jwe = clone $this;
         $jwe->iv = $iv;
@@ -178,7 +178,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getTag()
+    public function getTag(): ?string
     {
         return $this->tag;
     }
@@ -186,7 +186,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withTag($tag)
+    public function withTag(string $tag): JWEInterface
     {
         $jwe = clone $this;
         $jwe->tag = $tag;
@@ -197,7 +197,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getEncodedSharedProtectedHeaders()
+    public function getEncodedSharedProtectedHeaders(): string
     {
         return $this->encoded_shared_protected_headers;
     }
@@ -205,7 +205,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withEncodedSharedProtectedHeaders($encoded_shared_protected_headers)
+    public function withEncodedSharedProtectedHeaders(string $encoded_shared_protected_headers): JWEInterface
     {
         $jwe = clone $this;
         $jwe->encoded_shared_protected_headers = $encoded_shared_protected_headers;
@@ -216,7 +216,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getSharedProtectedHeaders()
+    public function getSharedProtectedHeaders(): array
     {
         return $this->shared_protected_headers;
     }
@@ -224,7 +224,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withSharedProtectedHeaders(array $shared_protected_headers)
+    public function withSharedProtectedHeaders(array $shared_protected_headers): JWEInterface
     {
         $jwe = clone $this;
         $jwe->shared_protected_headers = $shared_protected_headers;
@@ -235,7 +235,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withSharedProtectedHeader($key, $value)
+    public function withSharedProtectedHeader(string $key, $value): JWEInterface
     {
         $jwe = clone $this;
         $jwe->shared_protected_headers[$key] = $value;
@@ -246,7 +246,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getSharedProtectedHeader($key)
+    public function getSharedProtectedHeader(string $key)
     {
         if ($this->hasSharedProtectedHeader($key)) {
             return $this->shared_protected_headers[$key];
@@ -257,7 +257,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function hasSharedProtectedHeader($key)
+    public function hasSharedProtectedHeader(string $key): bool
     {
         return array_key_exists($key, $this->shared_protected_headers);
     }
@@ -265,7 +265,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withSharedHeaders(array $shared_headers)
+    public function withSharedHeaders(array $shared_headers): JWEInterface
     {
         $jwe = clone $this;
         $jwe->shared_headers = $shared_headers;
@@ -276,7 +276,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function withSharedHeader($key, $value)
+    public function withSharedHeader(string $key, $value): JWEInterface
     {
         $jwe = clone $this;
         $jwe->shared_headers[$key] = $value;
@@ -287,7 +287,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getSharedHeaders()
+    public function getSharedHeaders(): array
     {
         return $this->shared_headers;
     }
@@ -295,7 +295,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function getSharedHeader($key)
+    public function getSharedHeader(string $key)
     {
         if ($this->hasSharedHeader($key)) {
             return $this->shared_headers[$key];
@@ -306,7 +306,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function hasSharedHeader($key)
+    public function hasSharedHeader(string $key): bool
     {
         return array_key_exists($key, $this->shared_headers);
     }
@@ -314,7 +314,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function toCompactJSON($id)
+    public function toCompactJSON(int $id): string
     {
         $recipient = $this->getRecipient($id);
 
@@ -359,7 +359,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function toFlattenedJSON($id)
+    public function toFlattenedJSON(int $id): string
     {
         $recipient = $this->getRecipient($id);
 
@@ -378,7 +378,7 @@ final class JWE implements JWEInterface
     /**
      * {@inheritdoc}
      */
-    public function toJSON()
+    public function toJSON(): string
     {
         $json = $this->getJSONBase();
         $json['recipients'] = [];

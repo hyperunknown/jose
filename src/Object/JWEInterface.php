@@ -18,207 +18,207 @@ interface JWEInterface extends JWTInterface
      *
      * @return int
      */
-    public function countRecipients();
+    public function countRecipients(): int;
 
     /**
      * @return bool
      */
-    public function isEncrypted();
+    public function isEncrypted(): bool;
 
     /**
-     * @param \Jose\Object\JWKInterface $recipient_key
-     * @param array                     $recipient_headers
+     * @param JWKInterface $recipient_key
+     * @param array        $recipient_headers
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function addRecipientInformation(JWKInterface $recipient_key, $recipient_headers = []);
+    public function addRecipientInformation(JWKInterface $recipient_key, array $recipient_headers = []): JWEInterface;
 
     /**
      * @param string|null $encrypted_key
      * @param array       $recipient_headers
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function addRecipientWithEncryptedKey($encrypted_key, array $recipient_headers);
+    public function addRecipientWithEncryptedKey(?string $encrypted_key, array $recipient_headers): JWEInterface;
 
     /**
      * Returns the recipients associated with the JWS.
      *
-     * @return \Jose\Object\RecipientInterface[]
+     * @return RecipientInterface[]
      */
-    public function getRecipients();
+    public function getRecipients(): array;
 
     /**
      * @param int $id
      *
-     * @return \Jose\Object\RecipientInterface
+     * @return RecipientInterface
      */
-    public function &getRecipient($id);
+    public function &getRecipient(int $id): RecipientInterface;
 
     /**
      * @param int $recipient
      *
      * @return string
      */
-    public function toCompactJSON($recipient);
+    public function toCompactJSON(int $recipient): string;
 
     /**
      * @param int $recipient
      *
      * @return string
      */
-    public function toFlattenedJSON($recipient);
+    public function toFlattenedJSON(int $recipient): string;
 
     /**
      * @return string
      */
-    public function toJSON();
+    public function toJSON(): string;
 
     /**
      * @internal
      *
      * @return string|null The cyphertext
      */
-    public function getCiphertext();
+    public function getCiphertext(): ?string;
 
     /**
      * @param string $ciphertext
      *
      * @internal
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withCiphertext($ciphertext);
+    public function withCiphertext(string $ciphertext): JWEInterface;
 
     /**
      * @internal
      *
      * @return string|null
      */
-    public function getAAD();
+    public function getAAD(): ?string;
 
     /**
      * @internal
      *
      * @param string $aad
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withAAD($aad);
+    public function withAAD(string $aad): JWEInterface;
 
     /**
      * @internal
      *
      * @return string|null
      */
-    public function getIV();
+    public function getIV(): ?string;
 
     /**
      * @internal
      *
      * @param string $iv
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withIV($iv);
+    public function withIV(string $iv): JWEInterface;
 
     /**
      * @internal
      *
      * @return string|null
      */
-    public function getTag();
+    public function getTag(): ?string;
 
     /**
      * @internal
      *
      * @param string $tag
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withTag($tag);
+    public function withTag(string $tag): JWEInterface;
 
     /**
      * @internal
      *
      * @return string
      */
-    public function getEncodedSharedProtectedHeaders();
+    public function getEncodedSharedProtectedHeaders(): string;
 
     /**
      * @internal
      *
      * @param string $encoded_shared_protected_headers
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withEncodedSharedProtectedHeaders($encoded_shared_protected_headers);
+    public function withEncodedSharedProtectedHeaders(string $encoded_shared_protected_headers): JWEInterface;
 
     /**
      * @return array
      */
-    public function getSharedProtectedHeaders();
+    public function getSharedProtectedHeaders(): array;
 
     /**
      * @param array $shared_protected_headers
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withSharedProtectedHeaders(array $shared_protected_headers);
+    public function withSharedProtectedHeaders(array $shared_protected_headers): JWEInterface;
 
     /**
      * @param string     $key
      * @param mixed|null $value
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withSharedProtectedHeader($key, $value);
+    public function withSharedProtectedHeader(string $key, $value): JWEInterface;
 
     /**
      * @param string $key The key
      *
      * @return mixed|null Header value
      */
-    public function getSharedProtectedHeader($key);
+    public function getSharedProtectedHeader(string $key);
 
     /**
      * @param string $key The key
      *
      * @return bool
      */
-    public function hasSharedProtectedHeader($key);
+    public function hasSharedProtectedHeader(string $key): bool;
 
     /**
      * @return array
      */
-    public function getSharedHeaders();
+    public function getSharedHeaders(): array;
 
     /**
      * @param array $shared_headers
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withSharedHeaders(array $shared_headers);
+    public function withSharedHeaders(array $shared_headers): JWEInterface;
 
     /**
      * @param string     $key
      * @param mixed|null $value
      *
-     * @return \Jose\Object\JWEInterface
+     * @return JWEInterface
      */
-    public function withSharedHeader($key, $value);
+    public function withSharedHeader(string $key, $value): JWEInterface;
 
     /**
      * @param string $key The key
      *
      * @return mixed|null Header value
      */
-    public function getSharedHeader($key);
+    public function getSharedHeader(string $key);
 
     /**
      * @param string $key The key
      *
      * @return bool
      */
-    public function hasSharedHeader($key);
+    public function hasSharedHeader(string $key): bool;
 }
