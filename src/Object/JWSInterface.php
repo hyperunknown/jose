@@ -16,82 +16,82 @@ interface JWSInterface extends JWTInterface
     /**
      * @return bool
      */
-    public function isPayloadDetached();
+    public function isPayloadDetached(): bool;
 
     /**
-     * @return \Jose\Object\JWTInterface
+     * @return JWSInterface
      */
-    public function withDetachedPayload();
+    public function withDetachedPayload(): JWSInterface;
 
     /**
-     * @return \Jose\Object\JWTInterface
+     * @return JWSInterface
      */
-    public function withAttachedPayload();
+    public function withAttachedPayload(): JWSInterface;
 
     /**
-     * @param \Jose\Object\SignatureInterface $signature
+     * @param SignatureInterface $signature
      *
      * @internal
      *
      * @return string|null
      */
-    public function getEncodedPayload(SignatureInterface $signature);
+    public function getEncodedPayload(SignatureInterface $signature): ?string;
 
     /**
      * Returns the number of signature associated with the JWS.
      *
      * @return int
      */
-    public function countSignatures();
+    public function countSignatures(): int;
 
     /**
-     * @param \Jose\Object\JWKInterface $signature_key
+     * @param JWKInterface $signature_key
      * @param array                     $protected_headers
      * @param array                     $headers
      *
-     * @return \Jose\Object\JWSInterface
+     * @return JWSInterface
      */
-    public function addSignatureInformation(JWKInterface $signature_key, array $protected_headers, array $headers = []);
+    public function addSignatureInformation(JWKInterface $signature_key, array $protected_headers, array $headers = []): JWSInterface;
 
     /**
      * @param string      $signature
      * @param string|null $encoded_protected_headers
      * @param array       $headers
      *
-     * @return \Jose\Object\JWSInterface
+     * @return JWSInterface
      */
-    public function addSignatureFromLoadedData($signature, $encoded_protected_headers, array $headers);
+    public function addSignatureFromLoadedData(string $signature, ?string $encoded_protected_headers, array $headers): JWSInterface;
 
     /**
      * Returns the signature associated with the JWS.
      *
-     * @return \Jose\Object\SignatureInterface[]
+     * @return SignatureInterface[]
      */
-    public function getSignatures();
+    public function getSignatures(): array;
 
     /**
      * @param int $id
      *
-     * @return \Jose\Object\SignatureInterface
+     * @return SignatureInterface
      */
-    public function &getSignature($id);
-
-    /**
-     * @param int $id
-     *
-     * @return string
-     */
-    public function toCompactJSON($id);
+    public function &getSignature(int $id): SignatureInterface;
 
     /**
      * @param int $id
      *
      * @return string
      */
-    public function toFlattenedJSON($id);
+    public function toCompactJSON(int $id):string;
+
+    /**
+     * @param int $id
+     *
+     * @return string
+     */
+    public function toFlattenedJSON(int $id):string;
 
     /**
      * @return string
      */
-    public function toJSON();
+    public function toJSON(): string;
 }

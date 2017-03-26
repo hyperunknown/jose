@@ -32,7 +32,7 @@ trait JWT
     /**
      * {@inheritdoc}
      */
-    public function withPayload($payload)
+    public function withPayload($payload): JWTInterface
     {
         $jwt = clone $this;
         $jwt->payload = $payload;
@@ -43,7 +43,7 @@ trait JWT
     /**
      * {@inheritdoc}
      */
-    public function getClaim($key)
+    public function getClaim(string $key)
     {
         if ($this->hasClaim($key)) {
             return $this->payload[$key];
@@ -54,7 +54,7 @@ trait JWT
     /**
      * {@inheritdoc}
      */
-    public function getClaims()
+    public function getClaims(): array
     {
         if (is_array($this->payload)) {
             return $this->payload;
@@ -65,7 +65,7 @@ trait JWT
     /**
      * {@inheritdoc}
      */
-    public function hasClaim($key)
+    public function hasClaim(string $key): bool
     {
         return $this->hasClaims() && array_key_exists($key, $this->payload);
     }
@@ -73,7 +73,7 @@ trait JWT
     /**
      * {@inheritdoc}
      */
-    public function hasClaims()
+    public function hasClaims(): bool
     {
         return is_array($this->payload);
     }
