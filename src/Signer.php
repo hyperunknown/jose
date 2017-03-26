@@ -11,7 +11,6 @@
 
 namespace Jose;
 
-use Assert\Assertion;
 use Base64Url\Base64Url;
 use Jose\Algorithm\JWAManager;
 use Jose\Algorithm\SignatureAlgorithmInterface;
@@ -124,29 +123,38 @@ final class Signer
             return;
         }
 
-        Assertion::true($signature->hasProtectedHeader('crit'), 'The protected header parameter "crit" is mandatory when protected header parameter "b64" is set.');
-        Assertion::isArray($signature->getProtectedHeader('crit'), 'The protected header parameter "crit" must be an array.');
-        Assertion::inArray('b64', $signature->getProtectedHeader('crit'), 'The protected header parameter "crit" must contain "b64" when protected header parameter "b64" is set.');
+        if (false == $signature->hasProtectedHeader('crit')) {
+            throw new \InvalidArgumentException('The protected header parameter "crit" is mandatory when protected header parameter "b64" is set.');
+        }
+        $critHeader = $signature->getProtectedHeader('crit');
+        if (!is_array($critHeader)) {
+            throw new \InvalidArgumentException('The protected header parameter "crit" must be an array.');
+        }
+        if (!in_array('b64', $critHeader)) {
+            throw new \InvalidArgumentException('The protected header parameter "crit" must contain "b64" when protected header parameter "b64" is set.');
+        }
     }
 
     /**
-     * @param array        $complete_header The complete header
+     * @param array        $complete_headers The complete headers
      * @param JWKInterface $key
      *
      * @return SignatureAlgorithmInterface
      */
-    private function getSignatureAlgorithm(array $complete_header, JWKInterface $key): SignatureAlgorithmInterface
+    private function getSignatureAlgorithm(array $complete_headers, JWKInterface $key): SignatureAlgorithmInterface
     {
-        Assertion::keyExists($complete_header, 'alg', 'No "alg" parameter set in the header.');
+        if (!array_key_exists('alg', $complete_headers)) {
+            throw new \InvalidArgumentException('No "alg" parameter set in the headers.');
+        }
+        if ($key->has('alg') && $key->get('alg') !== $complete_headers['alg']) {
+            throw new \InvalidArgumentException(sprintf('The algorithm "%s" is not allowed with this key.', $complete_headers['alg']));
+        }
 
-        Assertion::false(
-            $key->has('alg') && $key->get('alg') !== $complete_header['alg'],
-            sprintf('The algorithm "%s" is not allowed with this key.', $complete_header['alg'])
-        );
+        $algorithm = $this->jwaManager->getAlgorithm($complete_headers['alg']);
+        if (!$algorithm instanceof SignatureAlgorithmInterface) {
+            throw new \InvalidArgumentException(sprintf('The algorithm "%s" is not supported or is not a signature algorithm.', $complete_headers['alg']));
+        }
 
-        $signature_algorithm = $this->jwaManager->getAlgorithm($complete_header['alg']);
-        Assertion::isInstanceOf($signature_algorithm, SignatureAlgorithmInterface::class, sprintf('The algorithm "%s" is not supported.', $complete_header['alg']));
-
-        return $signature_algorithm;
+        return $algorithm;
     }
 }

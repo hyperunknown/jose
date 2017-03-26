@@ -26,7 +26,7 @@ class SignerTest extends TestBase
 {
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage No "alg" parameter set in the header.
+     * @expectedExceptionMessage No "alg" parameter set in the headers.
      */
     public function testAlgParameterIsMissing()
     {
@@ -40,7 +40,7 @@ class SignerTest extends TestBase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The algorithm "foo" is not supported.
+     * @expectedExceptionMessage The algorithm "foo" is not supported or is not a signature algorithm.
      */
     public function testAlgParameterIsNotSupported()
     {

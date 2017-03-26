@@ -15,7 +15,7 @@ $jwe = JWEFactory::createJWE(
         'alg' => 'RSA-OAEP-256',
         'zip' => 'DEF',
     ]
-    );
+);
 ```
 
 The first parameter is the payload (in this example, this is a message).

@@ -29,6 +29,11 @@ This library provides an implementation of:
 * JSON Web Key Thumbprint ([RFC 7638](https://tools.ietf.org/html/rfc7638)).
 * Unencoded Payload Option [RFC7797](https://tools.ietf.org/html/rfc7797).
 
+If you really love that library, then you can help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/Spomky-Labs/jose/badge.svg?style=beer-square)](https://beerpay.io/Spomky-Labs/jose)
+[![Beerpay](https://beerpay.io/Spomky-Labs/jose/make-wish.svg?style=flat-square)](https://beerpay.io/Spomky-Labs/jose?focus=wish)
+
 # Provided Features
 
 ## Supported Input Types:
@@ -121,9 +126,10 @@ The release process [is described here](doc/Release.md).
 This library needs at least:
 * ![PHP 7.1+](https://img.shields.io/badge/PHP-7.1%2B-ff69b4.svg),
 * OpenSSL extension.
+* MBString extension.
 
 Please consider the following optional requirements:
-* For AES-GCM based algorithms (`AxxxGCM` and `AxxxGCMKW`) if not on PHP 7.1+: [PHP Crypto](https://github.com/bukka/php-crypto) Extension (at least `v0.2.1`) is highly recommended as encryption/decryption is faster than the pure PHP implementation.
+* For ECDH-ES based algorithms (`ECDH-ES`, `ECDH-ES+A128KW`, `ECDH-ES+A192KW` and `ECDH-ES+A256KW`): `mdanter/ecc` (version `^0.4.0`). Please note that this library is not recommended as very slow.
 * For Ed25519 algorithm: [php-ed25519-ext](https://github.com/encedo/php-ed25519-ext) required
 * For X25519 algorithm: [php-curve25519-ext](https://github.com/encedo/php-curve25519-ext) required
 
@@ -164,10 +170,6 @@ Requests for new features, bug fixed and all other ideas to make this library us
 If you feel comfortable writing code, you could try to fix [opened issues where help is wanted](https://github.com/Spomky-Labs/jose/labels/help+wanted) or [those that are easy to fix](https://github.com/Spomky-Labs/jose/labels/easy-pick).
 
 Do not forget to [follow these best practices](doc/Contributing.md).
-
-If you really love that library, then you can help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/Spomky-Labs/jose/badge.svg?style=beer-square)](https://beerpay.io/Spomky-Labs/jose)  [![Beerpay](https://beerpay.io/Spomky-Labs/jose/make-wish.svg?style=flat-square)](https://beerpay.io/Spomky-Labs/jose?focus=wish)
 
 # Licence
 
