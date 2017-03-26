@@ -11,7 +11,6 @@
 
 namespace Jose;
 
-use Assert\Assertion;
 use Jose\Object\JWEInterface;
 use Jose\Object\JWKInterface;
 use Jose\Object\JWKSet;
@@ -121,7 +120,9 @@ final class Loader
     private function loadAndDecrypt(string $input, JWKSetInterface $jwk_set, array $allowed_key_encryption_algorithms, array $allowed_content_encryption_algorithms, ?int &$recipient_index = null): JWEInterface
     {
         $jwt = $this->load($input);
-        Assertion::isInstanceOf($jwt, JWEInterface::class, 'The input is not a valid JWE');
+        if (!$jwt instanceof JWEInterface) {
+            throw new \InvalidArgumentException('The input is not a valid JWE.');
+        }
         $decrypted = Decrypter::createDecrypter($allowed_key_encryption_algorithms, $allowed_content_encryption_algorithms, ['DEF', 'ZLIB', 'GZ']);
 
         $decrypted->decryptUsingKeySet($jwt, $jwk_set, $recipient_index);
@@ -141,7 +142,9 @@ final class Loader
     private function loadAndVerifySignature(string $input, JWKSetInterface $jwk_set, array $allowed_algorithms, string $detached_payload = null, ?int &$signature_index = null): JWSInterface
     {
         $jwt = $this->load($input);
-        Assertion::isInstanceOf($jwt, JWSInterface::class, 'The input is not a valid JWS.');
+        if (!$jwt instanceof JWSInterface) {
+            throw new \InvalidArgumentException('The input is not a valid JWS.');
+        }
         $verifier = Verifier::createVerifier($allowed_algorithms);
 
         $verifier->verifyWithKeySet($jwt, $jwk_set, $detached_payload, $signature_index);
