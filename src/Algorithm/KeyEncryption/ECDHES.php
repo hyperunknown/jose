@@ -148,6 +148,9 @@ final class ECDHES implements KeyAgreementInterface
             case 'P-256':
             case 'P-384':
             case 'P-521':
+                if (!class_exists('Mdanter\Ecc\Crypto\EcDH\EcDH')) {
+                    throw new \RuntimeException('the library "mdanter/ecc" must be installed to use ECDH-ES algorithms.');
+                }
                 Assertion::eq($key->get('kty'), 'EC', 'Wrong key type.');
                 Assertion::true($key->has('y'), 'The key parameter "y" is missing.');
                 break;

@@ -29,9 +29,6 @@ use Jose\Object\RotatableJWKSet;
 use Jose\Object\StorableJWK;
 use Jose\Object\StorableJWKSet;
 use Jose\Object\X5UJWKSet;
-use Mdanter\Ecc\Curves\CurveFactory;
-use Mdanter\Ecc\Curves\NistCurve;
-use Mdanter\Ecc\EccFactory;
 
 final class JWKFactory
 {
@@ -143,38 +140,19 @@ final class JWKFactory
     {
         Assertion::keyExists($values, 'crv', 'The curve is not set.');
         $curve = $values['crv'];
-        if (function_exists('openssl_get_curve_names')) {
-            $args = [
-                'curve_name'       => self::getOpensslName($curve),
-                'private_key_type' => OPENSSL_KEYTYPE_EC,
-            ];
-            $key = openssl_pkey_new($args);
-            $res = openssl_pkey_export($key, $out);
-            Assertion::true($res, 'Unable to create the key');
+        $args = [
+            'curve_name'       => self::getOpensslName($curve),
+            'private_key_type' => OPENSSL_KEYTYPE_EC,
+        ];
+        $key = openssl_pkey_new($args);
+        $res = openssl_pkey_export($key, $out);
+        Assertion::true($res, 'Unable to create the key');
 
-            $rsa = new ECKey($out);
-            $values = array_merge(
-                $values,
-                $rsa->toArray()
-            );
-
-            return new JWK($values);
-        } else {
-            $curve_name = self::getNistName($curve);
-            $generator = CurveFactory::getGeneratorByName($curve_name);
-            $private_key = $generator->createPrivateKey();
-
-            $values = array_merge(
-                $values,
-                [
-                    'kty' => 'EC',
-                    'crv' => $curve,
-                    'x'   => self::encodeValue($private_key->getPublicKey()->getPoint()->getX()),
-                    'y'   => self::encodeValue($private_key->getPublicKey()->getPoint()->getY()),
-                    'd'   => self::encodeValue($private_key->getSecret()),
-                ]
-            );
-        }
+        $rsa = new ECKey($out);
+        $values = array_merge(
+            $values,
+            $rsa->toArray()
+        );
 
         return new JWK($values);
     }
@@ -258,30 +236,6 @@ final class JWKFactory
     }
 
     /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private static function encodeValue(string $value): string
-    {
-        $value = gmp_strval($value);
-
-        return Base64Url::encode(self::convertDecToBin($value));
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private static function convertDecToBin(string $value): string
-    {
-        $adapter = EccFactory::getAdapter();
-
-        return hex2bin($adapter->decHex($value));
-    }
-
-    /**
      * @param string $curve
      *
      * @throws \InvalidArgumentException
@@ -297,27 +251,6 @@ final class JWKFactory
                 return 'secp384r1';
             case 'P-521':
                 return 'secp521r1';
-            default:
-                throw new \InvalidArgumentException(sprintf('The curve "%s" is not supported.', $curve));
-        }
-    }
-
-    /**
-     * @param string $curve
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return string
-     */
-    private static function getNistName(string $curve): string
-    {
-        switch ($curve) {
-            case 'P-256':
-                return NistCurve::NAME_P256;
-            case 'P-384':
-                return NistCurve::NAME_P384;
-            case 'P-521':
-                return NistCurve::NAME_P521;
             default:
                 throw new \InvalidArgumentException(sprintf('The curve "%s" is not supported.', $curve));
         }

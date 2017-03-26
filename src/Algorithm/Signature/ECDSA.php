@@ -12,17 +12,12 @@
 namespace Jose\Algorithm\Signature;
 
 use Assert\Assertion;
-use Base64Url\Base64Url;
 use FG\ASN1\Object;
 use FG\ASN1\Universal\Integer;
 use FG\ASN1\Universal\Sequence;
 use Jose\Algorithm\SignatureAlgorithmInterface;
 use Jose\KeyConverter\ECKey;
 use Jose\Object\JWKInterface;
-use Mdanter\Ecc\Crypto\Signature\Signature;
-use Mdanter\Ecc\EccFactory;
-use Mdanter\Ecc\Primitives\GeneratorPoint;
-use Mdanter\Ecc\Random\RandomGeneratorFactory;
 
 /**
  * Class ECDSA.
@@ -37,11 +32,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
         $this->checkKey($key);
         Assertion::true($key->has('d'), 'The EC key is not private');
 
-        if (defined('OPENSSL_KEYTYPE_EC')) {
-            return $this->getOpenSSLSignature($key, $data);
-        }
-
-        return $this->getPHPECCSignature($key, $data);
+        return $this->getOpenSSLSignature($key, $data);
     }
 
     /**
@@ -70,33 +61,6 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     }
 
     /**
-     * @param \Jose\Object\JWKInterface $key
-     * @param string                    $data
-     *
-     * @return string
-     */
-    private function getPHPECCSignature(JWKInterface $key, string $data): string
-    {
-        $p = $this->getGenerator();
-        $d = $this->convertBase64ToGmp($key->get('d'));
-        $hash = $this->convertHexToGmp(hash($this->getHashAlgorithm(), $data));
-
-        $k = RandomGeneratorFactory::getRandomGenerator()->generate($p->getOrder());
-
-        $signer = EccFactory::getSigner();
-
-        $private_key = $p->getPrivateKeyFrom($d);
-        $signature = $signer->sign($private_key, $hash, $k);
-
-        $part_length = $this->getSignaturePartLength();
-
-        $R = str_pad($this->convertDecToHex($signature->getR()), $part_length, '0', STR_PAD_LEFT);
-        $S = str_pad($this->convertDecToHex($signature->getS()), $part_length, '0', STR_PAD_LEFT);
-
-        return $this->convertHexToBin($R.$S);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function verify(JWKInterface $key, string $data, string $signature): bool
@@ -111,11 +75,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
         $R = mb_substr($signature, 0, $part_length, '8bit');
         $S = mb_substr($signature, $part_length, null, '8bit');
 
-        if (defined('OPENSSL_KEYTYPE_EC')) {
-            return $this->verifyOpenSSLSignature($key, $data, $R, $S);
-        }
-
-        return $this->verifyPHPECCSignature($key, $data, $R, $S);
+        return $this->verifyOpenSSLSignature($key, $data, $R, $S);
     }
 
     /**
@@ -138,40 +98,6 @@ abstract class ECDSA implements SignatureAlgorithmInterface
 
         return 1 === openssl_verify($data, $oid_sequence->getBinary(), $pem, $this->getHashAlgorithm());
     }
-
-    /**
-     * @param \Jose\Object\JWKInterface $key
-     * @param string                    $data
-     * @param string                    $R
-     * @param string                    $S
-     *
-     * @return bool
-     */
-    private function verifyPHPECCSignature(JWKInterface $key, string $data, string $R, string $S): bool
-    {
-        $p = $this->getGenerator();
-        $x = $this->convertBase64ToGmp($key->get('x'));
-        $y = $this->convertBase64ToGmp($key->get('y'));
-        $hash = $this->convertHexToGmp(hash($this->getHashAlgorithm(), $data));
-
-        $public_key = $p->getPublicKeyFrom($x, $y);
-
-        $signer = EccFactory::getSigner();
-
-        return $signer->verify(
-            $public_key,
-            new Signature(
-                $this->convertHexToGmp($R),
-                $this->convertHexToGmp($S)
-            ),
-            $hash
-        );
-    }
-
-    /**
-     * @return GeneratorPoint
-     */
-    abstract protected function getGenerator(): GeneratorPoint;
 
     /**
      * @return string
@@ -214,7 +140,7 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     {
         $value = gmp_strval($value, 10);
 
-        return EccFactory::getAdapter()->decHex($value);
+        return gmp_strval($value, 16);
     }
 
     /**
@@ -225,18 +151,6 @@ abstract class ECDSA implements SignatureAlgorithmInterface
     private function convertHexToGmp(string $value): \GMP
     {
         return gmp_init($value, 16);
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return \GMP
-     */
-    private function convertBase64ToGmp(string $value): \GMP
-    {
-        $value = unpack('H*', Base64Url::decode($value));
-
-        return gmp_init($value[1], 16);
     }
 
     /**

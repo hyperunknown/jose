@@ -11,19 +11,8 @@
 
 namespace Jose\Algorithm\Signature;
 
-use Mdanter\Ecc\EccFactory;
-use Mdanter\Ecc\Primitives\GeneratorPoint;
-
 final class ES384 extends ECDSA
 {
-    /**
-     * @return GeneratorPoint
-     */
-    protected function getGenerator(): GeneratorPoint
-    {
-        return EccFactory::getNistCurves()->generator384();
-    }
-
     /**
      * @return string
      */
