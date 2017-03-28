@@ -11,8 +11,6 @@
 
 namespace Jose\Compression;
 
-use Assert\Assertion;
-
 /**
  * This class implements the compression algorithm DEF (deflate)
  * This compression algorithm is part of the specification.
@@ -31,7 +29,9 @@ final class Deflate implements CompressionInterface
      */
     public function __construct(int $compressionLevel = -1)
     {
-        Assertion::range($compressionLevel, -1, 9, 'The compression level can be given as 0 for no compression up to 9 for maximum compression. If -1 given, the default compression level will be the default compression level of the zlib library.');
+        if (-1 > $compressionLevel || 9 < $compressionLevel) {
+            throw new \InvalidArgumentException('The compression level can be given as 0 for no compression up to 9 for maximum compression. If -1 given, the default compression level will be the default compression level.');
+        }
 
         $this->compressionLevel = $compressionLevel;
     }
@@ -58,7 +58,9 @@ final class Deflate implements CompressionInterface
     public function compress(string $data): string
     {
         $data = gzdeflate($data, $this->getCompressionLevel());
-        Assertion::false(false === $data, 'Unable to compress data');
+        if (false === $data) {
+            throw new \RuntimeException('Unable to compress data');
+        }
 
         return $data;
     }
@@ -69,7 +71,9 @@ final class Deflate implements CompressionInterface
     public function uncompress(string $data): string
     {
         $data = gzinflate($data);
-        Assertion::false(false === $data, 'Unable to uncompress data');
+        if (false === $data) {
+            throw new \RuntimeException('Unable to uncompress data');
+        }
 
         return $data;
     }

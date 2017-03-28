@@ -11,7 +11,6 @@
 
 namespace Jose\Algorithm\KeyEncryption;
 
-use Assert\Assertion;
 use Base64Url\Base64Url;
 use Jose\Object\JWKInterface;
 
@@ -34,7 +33,9 @@ abstract class AESGCMKW implements KeyWrappingInterface
         $tag = null;
         $tag_length = 128;
         $encrypted_cek = openssl_encrypt($cek, $mode, $kek, OPENSSL_RAW_DATA, $iv, $tag, null, $tag_length / 8);
-        Assertion::true(false !== $encrypted_cek, 'Unable to encrypt the data.');
+        if(false === $encrypted_cek) {
+            throw new \InvalidArgumentException('Unable to encrypt the data.');
+        }
 
         $additional_headers['tag'] = Base64Url::encode($tag);
 
@@ -54,7 +55,12 @@ abstract class AESGCMKW implements KeyWrappingInterface
         $iv = Base64Url::decode($header['iv']);
         $mode = $this->getMode($kek);
 
-        return openssl_decrypt($encrypted_cek, $mode, $kek, OPENSSL_RAW_DATA, $iv, $tag, null);
+        $decrypted_cek = openssl_decrypt($encrypted_cek, $mode, $kek, OPENSSL_RAW_DATA, $iv, $tag, null);
+        if(false === $decrypted_cek) {
+            throw new \InvalidArgumentException('Unable to decrypt the data.');
+        }
+
+        return $decrypted_cek;
     }
 
     /**
@@ -70,8 +76,12 @@ abstract class AESGCMKW implements KeyWrappingInterface
      */
     protected function checkKey(JWKInterface $key)
     {
-        Assertion::eq($key->get('kty'), 'oct', 'Wrong key type.');
-        Assertion::true($key->has('k'), 'The key parameter "k" is missing.');
+        if ('oct' !== $key->get('kty')) {
+            throw new \InvalidArgumentException('Wrong key type.');
+        }
+        if (false === $key->has('k')) {
+            throw new \InvalidArgumentException('The key parameter "k" is missing.');
+        }
     }
 
     /**
@@ -79,8 +89,11 @@ abstract class AESGCMKW implements KeyWrappingInterface
      */
     protected function checkAdditionalParameters(array $header)
     {
-        Assertion::keyExists($header, 'iv', 'Parameter "iv" is missing.');
-        Assertion::keyExists($header, 'tag', 'Parameter "tag" is missing.');
+        foreach (['iv', 'tag'] as $key) {
+            if(!array_key_exists($key, $header)) {
+                throw new \InvalidArgumentException(sprintf('Parameter "%s" is missing.', $key));
+            }
+        }
     }
 
     /**

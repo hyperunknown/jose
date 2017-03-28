@@ -11,7 +11,6 @@
 
 namespace Jose\Checker;
 
-use Assert\Assertion;
 use Jose\Object;
 
 /**
@@ -66,7 +65,9 @@ final class CheckerManager
      */
     public function checkJWS(Object\JWSInterface $jws, int $signature)
     {
-        Assertion::lessThan($signature, $jws->countSignatures());
+        if($signature >= $jws->countSignatures()) {
+            throw new \InvalidArgumentException('Invalid signature index');
+        }
 
         $checked_claims = $this->checkJWT($jws);
         $protected_headers = $jws->getSignature($signature)->getProtectedHeaders();

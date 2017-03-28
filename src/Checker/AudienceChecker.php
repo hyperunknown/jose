@@ -11,7 +11,6 @@
 
 namespace Jose\Checker;
 
-use Assert\Assertion;
 use Jose\Object\JWTInterface;
 
 final class AudienceChecker implements ClaimCheckerInterface
@@ -42,9 +41,13 @@ final class AudienceChecker implements ClaimCheckerInterface
 
         $audience = $jwt->getClaim('aud');
         if (is_string($audience)) {
-            Assertion::eq($audience, $this->getAudience(), 'Bad audience.');
+            if($this->getAudience() !== $audience) {
+                throw new \InvalidArgumentException('Bad audience.');
+            }
         } elseif (is_array($audience)) {
-            Assertion::inArray($this->getAudience(), $audience, 'Bad audience.');
+            if(!in_array($this->getAudience(), $audience)) {
+                throw new \InvalidArgumentException('Bad audience.');
+            }
         } else {
             throw new \InvalidArgumentException('Bad audience.');
         }

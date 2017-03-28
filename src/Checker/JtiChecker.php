@@ -11,7 +11,6 @@
 
 namespace Jose\Checker;
 
-use Assert\Assertion;
 use Jose\Object\JWTInterface;
 
 abstract class JtiChecker implements ClaimCheckerInterface
@@ -26,7 +25,9 @@ abstract class JtiChecker implements ClaimCheckerInterface
         }
 
         $jti = $jwt->getClaim('jti');
-        Assertion::true($this->isJtiValid($jti), sprintf('Invalid token ID "%s".', $jti));
+        if(false === $this->isJtiValid($jti)) {
+            throw new \InvalidArgumentException(sprintf('Invalid token ID "%s".', $jti));
+        }
 
         return ['jti'];
     }

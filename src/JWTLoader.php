@@ -11,7 +11,6 @@
 
 namespace Jose;
 
-use Assert\Assertion;
 use Jose\Checker\CheckerManager;
 use Jose\Object\JWEInterface;
 use Jose\Object\JWKSetInterface;
@@ -110,14 +109,14 @@ final class JWTLoader
      */
     public function load(string $assertion, ?JWKSetInterface $encryption_key_set = null, bool $is_encryption_required = false): JWTInterface
     {
-        Assertion::string($assertion);
-        Assertion::boolean($is_encryption_required);
         $jwt = $this->loader->load($assertion);
         if ($jwt instanceof JWEInterface) {
-            Assertion::notNull($encryption_key_set, 'Encryption key set is not available.');
-            Assertion::true($this->isDecryptionSupportEnabled(), 'Encryption support is not enabled.');
-            Assertion::inArray($jwt->getSharedProtectedHeader('alg'), $this->getSupportedKeyEncryptionAlgorithms(), sprintf('The key encryption algorithm "%s" is not allowed.', $jwt->getSharedProtectedHeader('alg')));
-            Assertion::inArray($jwt->getSharedProtectedHeader('enc'), $this->getSupportedContentEncryptionAlgorithms(), sprintf('The content encryption algorithm "%s" is not allowed or not supported.', $jwt->getSharedProtectedHeader('enc')));
+            if(false === $this->isDecryptionSupportEnabled()) {
+                throw new \InvalidArgumentException('Encryption support is not enabled.');
+            }
+            if(null === $encryption_key_set) {
+                throw new \InvalidArgumentException($encryption_key_set, 'Encryption key set is not available.');
+            }
             $jwt = $this->decryptAssertion($jwt, $encryption_key_set);
         } elseif (true === $is_encryption_required) {
             throw new \InvalidArgumentException('The assertion must be encrypted.');
@@ -135,11 +134,11 @@ final class JWTLoader
      */
     public function verify(JWSInterface $jws, JWKSetInterface $signature_key_set, ?string $detached_payload = null): int
     {
-        Assertion::inArray($jws->getSignature(0)->getProtectedHeader('alg'), $this->getSupportedSignatureAlgorithms(), sprintf('The signature algorithm "%s" is not supported or not allowed.', $jws->getSignature(0)->getProtectedHeader('alg')));
-
         $index = null;
         $this->verifier->verifyWithKeySet($jws, $signature_key_set, $detached_payload, $index);
-        Assertion::notNull($index, 'JWS signature(s) verification failed.');
+        if (null === $index) {
+            throw new \InvalidArgumentException('JWS signature(s) verification failed.');
+        }
         $this->checker_manager->checkJWS($jws, $index);
 
         return $index;
@@ -156,7 +155,9 @@ final class JWTLoader
         $this->decrypter->decryptUsingKeySet($jwe, $encryption_key_set);
 
         $jws = $this->loader->load($jwe->getPayload());
-        Assertion::isInstanceOf($jws, JWSInterface::class, 'The encrypted assertion does not contain a JWS.');
+        if (!$jws instanceof JWSInterface) {
+            throw new \InvalidArgumentException('The encrypted assertion does not contain a JWS.');
+        }
 
         return $jws;
     }

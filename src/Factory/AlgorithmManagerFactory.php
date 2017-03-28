@@ -11,7 +11,6 @@
 
 namespace Jose\Factory;
 
-use Assert\Assertion;
 use Jose\Algorithm\JWAInterface;
 use Jose\Algorithm\JWAManager;
 use Jose\Algorithm\Signature;
@@ -32,10 +31,11 @@ final class AlgorithmManagerFactory
         foreach ($algorithms as $algorithm) {
             if ($algorithm instanceof JWAInterface) {
                 $jwaManager->addAlgorithm($algorithm);
-            } else {
-                Assertion::string($algorithm, 'Bad argument: must be a list with either algorithm names (string) or instances of JWAInterface.');
+            } elseif(is_string($algorithm)) {
                 $class = self::getAlgorithmClass($algorithm);
                 $jwaManager->addAlgorithm(new $class());
+            } else {
+                throw new \InvalidArgumentException('Bad argument: must be a list with either algorithm names (string) or instances of JWAInterface.');
             }
         }
 
@@ -61,7 +61,9 @@ final class AlgorithmManagerFactory
      */
     private static function getAlgorithmClass(string $algorithm): string
     {
-        Assertion::true(self::isAlgorithmSupported($algorithm), sprintf('Algorithm "%s" is not supported.', $algorithm));
+        if (false === self::isAlgorithmSupported($algorithm)) {
+            throw new \InvalidArgumentException(sprintf('Algorithm "%s" is not supported.', $algorithm));
+        }
 
         return self::getSupportedAlgorithms()[$algorithm];
     }

@@ -11,7 +11,6 @@
 
 namespace Jose\Algorithm\Signature;
 
-use Assert\Assertion;
 use Jose\Algorithm\SignatureAlgorithmInterface;
 use Jose\KeyConverter\RSAKey;
 use Jose\Object\JWKInterface;
@@ -64,7 +63,9 @@ abstract class RSA implements SignatureAlgorithmInterface
     public function sign(JWKInterface $key, string $input): string
     {
         $this->checkKey($key);
-        Assertion::true($key->has('d'), 'The key is not a private key');
+        if (false === $key->has('d')) {
+            throw new \InvalidArgumentException('The key is not a private key');
+        }
 
         $priv = new RSAKey($key);
 
@@ -74,7 +75,9 @@ abstract class RSA implements SignatureAlgorithmInterface
         } else {
             $result = openssl_sign($input, $signature, $priv->toPEM(), $this->getAlgorithm());
         }
-        Assertion::true($result, 'An error occurred during the creation of the signature');
+        if(false === $result) {
+            throw new \InvalidArgumentException('An error occurred during the creation of the signature');
+        }
 
         return $signature;
     }
@@ -84,6 +87,8 @@ abstract class RSA implements SignatureAlgorithmInterface
      */
     private function checkKey(JWKInterface $key)
     {
-        Assertion::eq($key->get('kty'), 'RSA', 'Wrong key type.');
+        if ('RSA' !== $key->get('kty')) {
+            throw new \InvalidArgumentException('Wrong key type.');
+        }
     }
 }

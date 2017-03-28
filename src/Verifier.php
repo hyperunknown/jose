@@ -70,10 +70,10 @@ final class Verifier
     /**
      * @param JWSInterface $jws
      * @param JWKSetInterface $jwk_set
-     * @param null $detached_payload
-     * @param null $recipient_index
+     * @param null|string $detached_payload
+     * @param int|null $recipient_index
      */
-    public function verifyWithKeySet(JWSInterface $jws, JWKSetInterface $jwk_set, $detached_payload = null, &$recipient_index = null)
+    public function verifyWithKeySet(JWSInterface $jws, JWKSetInterface $jwk_set, ?string $detached_payload = null, ?int &$recipient_index = null)
     {
         $this->verifySignatures($jws, $jwk_set, $detached_payload, $recipient_index);
     }
